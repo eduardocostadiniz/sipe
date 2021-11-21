@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"sonarlint.disableTelemetry": true,
+		"workbench.colorTheme": "Dracula",
+		"javascript.format.enable": true,
+		"editor.formatOnSave": true,
+		"editor.tabSize": 2,
+		"eslint.enable": true,
+		"editor.minimap.enabled": false
+	}
+}
