@@ -15,32 +15,34 @@ html, body {
   height: 100%;
 }
 
-.container {
-  display: grid;
-  grid-template-columns: 1fr 5fr;
-  grid-template-rows: 60px 1fr;
-  width: 100%;
-  height: 100%;
-}
-
 #menu-toggle {
   display: none;
 }
 
-#menu-toggle:checked ~ .container .menu-container .brand-info img,
-#menu-toggle:checked ~ .container .menu-container .menu-options ul li label:last-child {
+#menu-toggle:checked ~ .menu-container .brand-info img,
+#menu-toggle:checked ~ .menu-container .menu-options ul li label:last-child {
   display: none;
 }
 
-#menu-toggle:checked ~ .container {
-  grid-template-columns: 60px calc(100vw - 60px);
+#menu-toggle:checked ~ .menu-container {
+  width: 60px;
+}
+
+#menu-toggle:checked ~ .main-container {
+  margin-left: 60px;
+  transition: width 500ms;
 }
 
 .menu-container {
-  grid-column: 1/2;
-  grid-row: 1/3;
   background-color: var(--primary-color);
   color: white;
+  position: fixed;
+  width: 240px;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  transition: width 500ms;
 }
 
 .brand-info {
@@ -96,14 +98,22 @@ html, body {
   grid-column: 2/3;
 }
 
+.main-container {
+  margin-left: 240px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 60px 1fr;
+}
+
 .header-container {
-  grid-column: 2/3;
+  grid-column: 1/2;
   grid-row: 1/2;
   background-color: white;
   display: flex;
   justify-content: right;
   align-items: center;
   padding-right: 20px;
+  box-shadow: 1px 1px 5px #D5D2D2;
 }
 
 .user-actions {
@@ -121,8 +131,8 @@ html, body {
   border-radius: 100%;
 }
 
-.main-container {
-  grid-column: 2/3;
+.content-container {
+  grid-column: 1/2;
   grid-row: 2/3;
   padding: 20px;
 }
@@ -130,14 +140,15 @@ html, body {
 .card-groups {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-evenly;
+  justify-content: center;
 }
 
 .card-single {
   background-color: white;
   border-radius: 10px;
   box-shadow: 1px 1px 5px #D5D2D2;
-  width: 270px;
+  width: 250px;
+  height: 80px;
   padding: 30px;
   margin: 5px;
   display: flex;
@@ -183,7 +194,6 @@ html, body {
 .order-last-activity table {
   width: 100%;
   border-collapse: collapse;
-  /* overflow-x: scroll; */
 }
 
 .order-last-activity table thead {
@@ -223,4 +233,24 @@ tbody tr:nth-child(even) {
 .order-status.order-cancelled {
   background-color: #F7DEDE;
   color: #801818;
+}
+
+@media only screen and (max-width: 920px) {
+  .card-single {
+    width: 70%;
+  }
+}
+
+@media only screen and (max-width: 680px) {
+  .main-container {
+    margin-left: 10px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .content-container {
+    display: block;
+    overflow-x: auto;
+    z-index: 90;
+  }
 }
