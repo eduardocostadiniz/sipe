@@ -38,7 +38,7 @@ html, body {
   color: white;
   position: fixed;
   width: 240px;
-  height: 100%;
+  height: calc(100% + 70px); /*No celular a barra do navegador some, causando uma visão de falha*/
   left: 0;
   top: 0;
   z-index: 100;
