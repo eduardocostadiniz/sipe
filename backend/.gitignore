@@ -1,0 +1,9 @@
+
+# vscode workspace
+*.code-workspace
+
+# dependencies
+/node_modules
+
+# environment variables
+.env

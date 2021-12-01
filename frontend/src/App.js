@@ -34,6 +34,10 @@ function App() {
               <label>Pagamentos</label>
             </li>
             <li>
+              <span className="ti-user"></span>
+              <label>Usuários</label>
+            </li>
+            <li>
               <span className=" ti-settings"></span>
               <label>Configurações</label>
             </li>
