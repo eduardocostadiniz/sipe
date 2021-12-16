@@ -1,8 +1,17 @@
+const path = require('path');
+
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+
 module.exports = {
   devtool: "source-map",
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'index_bundle.js',
+    publicPath: '/'
+  },
   devServer: {
-    port: 3030
+    port: 3030,
+    historyApiFallback: true,
   },
   module: {
     rules: [
