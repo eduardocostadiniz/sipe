@@ -1,18 +1,20 @@
 import React from "react";
 
+import { StyledHeader, UserActions, UserAvatar } from './styles';
+
 import YelaWolfImg from '../../assets/img/yelawolf.jpg';
 
 function Header() {
   return (
-    <header className="header-container">
-      <div className="user-actions">
+    <StyledHeader className="header-container">
+      <UserActions className="user-actions">
         <span className="ti-shopping-cart"></span>
         <span className="ti-bell"></span>
-      </div>
-      <div className="user-avatar">
+      </UserActions>
+      <UserAvatar className="user-avatar">
         <img src={YelaWolfImg} alt="User avatar" />
-      </div>
-    </header>
+      </UserAvatar>
+    </StyledHeader>
   )
 }
 

@@ -1,31 +1,24 @@
 import React from 'react';
 
+import { CardContainer, Card } from '../../components/Card';
+
 function Dashboards() {
   return (
     <>
-      <div className="card-groups">
-        <div className="card-single">
-          <span className="ti-star"></span>
-          <div className="card-info">
-            <label>Valor dos pedidos no mês</label>
-            <span>R$ 12.345, 00</span>
-          </div>
-        </div>
-        <div className="card-single">
-          <span className="ti-stats-up"></span>
-          <div className="card-info">
-            <label>Total de pedidos no mês</label>
-            <span>142</span>
-          </div>
-        </div>
-        <div className="card-single">
-          <span className="ti-stats-down"></span>
-          <div className="card-info">
-            <label>Total de pedidos cancelados</label>
-            <span>15</span>
-          </div>
-        </div>
-      </div>
+      <CardContainer>
+        <Card iconName='ti-star'>
+          <label>Valor dos pedidos no mês</label>
+          <span>R$ 12.345, 00</span>
+        </Card>
+        <Card iconName='ti-stats-up'>
+          <label>Total de pedidos no mês</label>
+          <span>142</span>
+        </Card>
+        <Card iconName='ti-stats-down'>
+          <label>Total de pedidos cancelados</label>
+          <span>15</span>
+        </Card>
+      </CardContainer>
 
       <div className="order-last-activity">
         <h3>Pedidos recentes</h3>

@@ -1,51 +1,43 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import { InputContainer, MenuContainer, BrandInfo, MenuOptions } from './styles';
 
 import EduGhostPlayerImg from '../../assets/img/EduGhostPlayer.jpg';
 
-function Menu() {
+
+function MenuItem({ path, iconName, name }) {
   let navigate = useNavigate();
+
+  return (
+    <li onClick={() => navigate(path)}>
+      <span className={iconName}></span>
+      <label>{name}</label>
+    </li>
+  );
+}
+
+function Menu() {
   return (
     <>
-      <input type="checkbox" id="menu-toggle" />
-      <div className="menu-container">
-        <div className="brand-info">
+      <InputContainer id='menu-toggle' type='checkbox' />
+      <MenuContainer className='menu-container'>
+        <BrandInfo className="brand-info">
           <img src={EduGhostPlayerImg} alt="Brand" />
           <label htmlFor="menu-toggle" className="ti-menu"></label>
-        </div>
-        <div className="menu-options">
+        </BrandInfo>
+        <MenuOptions className="menu-options">
           <ul>
-            <li onClick={() => navigate('/')}>
-              <span className="ti-home"></span>
-              <label>Home</label>
-            </li>
-            <li onClick={() => navigate('/clients')}>
-              <span className="ti-plus"></span>
-              <label>Clientes</label>
-            </li>
-            <li onClick={() => navigate('/products')}>
-              <span className="ti-package"></span>
-              <label>Produtos</label>
-            </li>
-            <li onClick={() => navigate('/orders')}>
-              <span className="ti-list"></span>
-              <label>Pedidos</label>
-            </li>
-            <li onClick={() => navigate('/payments')}>
-              <span className="ti-money"></span>
-              <label>Pagamentos</label>
-            </li>
-            <li onClick={() => navigate('/users')}>
-              <span className="ti-user"></span>
-              <label>Usuários</label>
-            </li>
-            <li onClick={() => navigate('/settings')}>
-              <span className=" ti-settings"></span>
-              <label>Configurações</label>
-            </li>
+            <MenuItem path='/' iconName='ti-home' name='Home' />
+            <MenuItem path='/clients' iconName='ti-plus' name='Clientes' />
+            <MenuItem path='/products' iconName='ti-package' name='Produtos' />
+            <MenuItem path='/orders' iconName='ti-list' name='Pedidos' />
+            <MenuItem path='/payments' iconName='ti-money' name='Pagamentos' />
+            <MenuItem path='/users' iconName='ti-user' name='Usuários' />
+            <MenuItem path='/settings' iconName='ti-settings' name='Configurações' />
           </ul>
-        </div>
-      </div>
+        </MenuOptions>
+      </MenuContainer>
     </>
   )
 }

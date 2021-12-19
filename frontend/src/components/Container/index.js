@@ -3,29 +3,15 @@ import { Menu } from "../Menu";
 
 import { Header } from "../Header";
 
-function MainContainer({ children }) {
-  return (
-    <main className="main-container">
-      {children}
-    </main>
-  )
-}
-
-function ContentContainer({ children }) {
-  return (
-    <div className="content-container">
-      {children}
-    </div>
-  )
-}
+import { MainContainer, ContentContainer } from './styles';
 
 function Container({ children }) {
   return (
     <>
       <Menu />
-      <MainContainer>
+      <MainContainer className='main-container'>
         <Header />
-        <ContentContainer>
+        <ContentContainer className='content-container'>
           {children}
         </ContentContainer>
       </MainContainer>
