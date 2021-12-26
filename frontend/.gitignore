@@ -4,3 +4,6 @@
 
 # dependencies
 /node_modules
+
+# node version manager
+.nvmrc

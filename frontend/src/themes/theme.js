@@ -1,8 +1,8 @@
 
 
-const theme = {
+const defaultTheme = {
   primary: 'teal',
   text: '#333'
 };
 
-export default theme;
+export default defaultTheme;

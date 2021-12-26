@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
+
+import UserContext from "../../contexts/userContext";
 
 function Settings() {
+  const { user } = useContext(UserContext);
+
   return (
-    <h1>Configurações</h1>
+    <h4>Configurações de {user && user.name}</h4>
   )
 }
 

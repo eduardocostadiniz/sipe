@@ -11,6 +11,7 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.16.5",
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.16.0",
     "babel-loader": "^8.2.3",
@@ -26,6 +27,7 @@
     "webpack-dev-server": "^4.5.0"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "react-router-dom": "^6.1.1",
     "styled-components": "^5.3.3"
   }

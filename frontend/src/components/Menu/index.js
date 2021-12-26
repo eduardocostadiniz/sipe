@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { InputContainer, MenuContainer, BrandInfo, MenuOptions } from './styles';
 
 import EduGhostPlayerImg from '../../assets/img/EduGhostPlayer.jpg';
+import UserContext from "../../contexts/userContext";
 
 
 function MenuItem({ path, iconName, name }) {
@@ -17,7 +18,19 @@ function MenuItem({ path, iconName, name }) {
   );
 }
 
+function MenuItemAction({ action }) {
+  // TODO: remover essa função quando a ação de logout for para o modal no avatar do usuário
+  return (
+    <li onClick={() => action()}>
+      <span className='ti-shift-right'></span>
+      <label>Sair</label>
+    </li>
+  );
+}
+
 function Menu() {
+  const { logoutUser } = useContext(UserContext);
+
   return (
     <>
       <InputContainer id='menu-toggle' type='checkbox' />
@@ -35,6 +48,7 @@ function Menu() {
             <MenuItem path='/payments' iconName='ti-money' name='Pagamentos' />
             <MenuItem path='/users' iconName='ti-user' name='Usuários' />
             <MenuItem path='/settings' iconName='ti-settings' name='Configurações' />
+            <MenuItemAction action={logoutUser} />
           </ul>
         </MenuOptions>
       </MenuContainer>

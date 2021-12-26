@@ -8,6 +8,7 @@ class User {
     this.name = dataCamelcase.name;
     this.password = dataCamelcase.password;
     this.avatar = dataCamelcase.avatar;
+    this.theme = dataCamelcase.theme;
     this.profile = dataCamelcase.profile;
     this.clientCnpj = dataCamelcase.clientCnpj;
     this.isActive = dataCamelcase.isActive;
