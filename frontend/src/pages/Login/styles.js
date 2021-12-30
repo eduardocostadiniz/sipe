@@ -11,7 +11,7 @@ const LoginContainer = styled.div`
 
   & div {
     width: 300px;
-    height: 300px;
+    height: 260px;
     padding: 20px;
     background-color: #EAEDED;
     border: none;

@@ -3,6 +3,7 @@ import { ThemeProvider } from 'styled-components';
 
 import defaultTheme from '../themes/theme';
 import { GlobalStyle } from '../styles/globals';
+import { convertTheme } from "../utils";
 
 const CustomThemeContext = React.createContext({});
 
@@ -11,7 +12,7 @@ export const CustomThemeProvider = ({ children }) => {
 
   function defineUserTheme(rawThemeConfig) {
     try {
-      const themeConfig = JSON.parse(rawThemeConfig || '{}');
+      const themeConfig = convertTheme(rawThemeConfig);
       if (themeConfig && themeConfig.primary && themeConfig.primary != defaultTheme.primary) {
         setTheme(themeConfig);
       }

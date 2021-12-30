@@ -1,7 +1,7 @@
 
 
 const defaultTheme = {
-  primary: 'teal',
+  primary: '#008080',
   text: '#333'
 };
 

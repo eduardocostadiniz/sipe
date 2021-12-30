@@ -10,3 +10,6 @@
 
 # node version manager
 .nvmrc
+
+# uploaded files
+/sipe-uploads

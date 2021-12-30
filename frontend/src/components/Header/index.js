@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
+import UserContext from "../../contexts/userContext";
 
 import { StyledHeader, UserActions, UserAvatar } from './styles';
 
-import YelaWolfImg from '../../assets/img/yelawolf.jpg';
-
 function Header() {
+  const { user } = useContext(UserContext);
+
   return (
     <StyledHeader className="header-container">
       <UserActions className="user-actions">
@@ -12,7 +13,7 @@ function Header() {
         <span className="ti-bell"></span>
       </UserActions>
       <UserAvatar className="user-avatar">
-        <img src={YelaWolfImg} alt="User avatar" />
+        <img src={user.avatar} alt="User avatar" />
       </UserAvatar>
     </StyledHeader>
   )
