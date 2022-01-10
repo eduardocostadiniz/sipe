@@ -6,8 +6,8 @@ import { Login } from '../pages/Login';
 function DefaultRoutes() {
   return (
     <Routes>
-      <Route index path='/' element={<Login />} />
-      <Route path='*' element={<Navigate to='/' />} />
+      {/* <Route index path='/' element={<Login />} />
+      <Route path='*' element={<Navigate to='/' />} /> */}
     </Routes>
   )
 }

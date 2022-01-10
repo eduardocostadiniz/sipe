@@ -6,15 +6,19 @@ import Routes from './routes';
 import './assets/themefy/themify-icons.css';
 import { UserProvider } from './contexts/userContext';
 import { CustomThemeProvider } from './contexts/customThemeContext';
+import { KeycloakProvider } from './contexts/keycloakContext';
+
 
 function App() {
   return (
     <React.StrictMode>
       <CustomThemeProvider>
         <UserProvider>
-          <BrowserRouter>
-            <Routes />
-          </BrowserRouter>
+          <KeycloakProvider>
+            <BrowserRouter>
+              <Routes />
+            </BrowserRouter>
+          </KeycloakProvider>
         </UserProvider>
       </CustomThemeProvider>
     </React.StrictMode>

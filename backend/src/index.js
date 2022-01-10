@@ -14,6 +14,6 @@ app.use(express.static(path.join(__dirname, '../sipe-uploads/avatars')));
 
 require('./app/controllers/index')(app);
 
-app.listen(8080, () => {
-  console.info("Running in port 8080...");
+app.listen(9090, () => {
+  console.info("Running in port 9090...");
 })

@@ -1,3 +1,4 @@
+// import { useKeycloak } from "@react-keycloak/web";
 import React, { useContext, useEffect, useState } from "react";
 import http from "../services/http";
 import userService from "../services/userService";
@@ -9,39 +10,16 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const { defineUserTheme } = useContext(CustomThemeContext);
 
-  useEffect(() => {
-    async function getUserLogged() {
-      const userTokenLogged = window.localStorage.getItem('userToken');
-
-      if (userTokenLogged) {
-        console.log('Carregando dados do usuário');
-        http.defaults.headers.Authorization = `Bearer ${userTokenLogged}`;
-        const result = await userService.getUserInfo();
-        const { user: userLoaded } = result.data;
-
-        setUser(userLoaded);
-        defineUserTheme(userLoaded.theme);
-      }
-    }
-    getUserLogged();
-
-  }, []);
-
-  async function loginUser(email, password) {
+  async function loginUser(email, token) {
     console.log(`Logando usuário ${email}`);
+
     try {
-
-      const userInfo = await userService.authUser(email, password);
-
-      const { user, token } = userInfo.data;
-
-      window.localStorage.setItem('userToken', token);
-
       http.defaults.headers.Authorization = `Bearer ${token}`
+      const result = await userService.getUserInfo();
+      const { user: userLoaded } = result.data;
 
-      setUser(user);
-      defineUserTheme(user.theme);
-
+      setUser(userLoaded);
+      defineUserTheme(userLoaded.theme);
     } catch (error) {
       console.error('Impossible to log in!', error);
     }

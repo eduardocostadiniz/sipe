@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { InputContainer, MenuContainer, BrandInfo, MenuOptions } from './styles';
 
 import EduGhostPlayerImg from '../../assets/img/EduGhostPlayer.jpg';
-import UserContext from "../../contexts/userContext";
+import KeycloakContext from "../../contexts/keycloakContext";
 
 
 function MenuItem({ path, iconName, name }) {
@@ -29,7 +29,7 @@ function MenuItemAction({ action }) {
 }
 
 function Menu() {
-  const { logoutUser } = useContext(UserContext);
+  const { disconnectUser } = useContext(KeycloakContext);
 
   return (
     <>
@@ -48,7 +48,7 @@ function Menu() {
             <MenuItem path='/payments' iconName='ti-money' name='Pagamentos' />
             <MenuItem path='/users' iconName='ti-user' name='Usuários' />
             <MenuItem path='/settings' iconName='ti-settings' name='Configurações' />
-            <MenuItemAction action={logoutUser} />
+            <MenuItemAction action={disconnectUser} />
           </ul>
         </MenuOptions>
       </MenuContainer>

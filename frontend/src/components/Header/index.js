@@ -13,7 +13,7 @@ function Header() {
         <span className="ti-bell"></span>
       </UserActions>
       <UserAvatar className="user-avatar">
-        <img src={user.avatar} alt="User avatar" />
+        <img src={user && user.avatar} alt="User avatar" />
       </UserAvatar>
     </StyledHeader>
   )

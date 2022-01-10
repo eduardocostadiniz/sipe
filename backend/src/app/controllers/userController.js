@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-const DEFAULT_AVATAR = 'http://192.168.100.62:8080/default.jpg'
+const DEFAULT_AVATAR = 'http://192.168.100.62:9090/default.jpg'
 
 router.post('/register', async (req, res) => {
   try {
@@ -76,7 +76,7 @@ router.post('/settings', multerStorage.single('userAvatar'), async (req, res) =>
   const email = req.userId;
   const { theme } = req.body;
   const userAvatar = req.file;
-  const fileWithPath = `http://192.168.100.62:8080/${userAvatar.filename}`;
+  const fileWithPath = `http://192.168.100.62:9090/${userAvatar.filename}`;
 
   await dbConnection.none('update users set theme = $1, avatar=$2 where email = $3', [theme, fileWithPath, email]);
 
