@@ -15,7 +15,6 @@ export const KeycloakProvider = ({ children }) => {
       const tokenParsed = keycloak.tokenParsed;
       loginUser(tokenParsed.email, keycloak.token);
       setInterval(function () {
-        // console.log('token: ', keycloak.token);
         keycloak.updateToken(15)
           .then(() => {
             http.defaults.headers.Authorization = `Bearer ${keycloak.token}`
@@ -28,9 +27,7 @@ export const KeycloakProvider = ({ children }) => {
 
   function onEventHandler(event, error) {
     try {
-      // console.log('Event: ', event);
       const fn = eventFactory[event];
-      // console.log('fn:', fn);
       fn()
     } catch (error) { }
   }
@@ -46,7 +43,6 @@ export const KeycloakProvider = ({ children }) => {
         authClient={keycloak}
         initOptions={initConfig}
         onEvent={(event, error) => onEventHandler(event, error)}
-      // onTokens={(tokens) => console.log(tokens)}
       >
         {children}
       </ReactKeycloakProvider>

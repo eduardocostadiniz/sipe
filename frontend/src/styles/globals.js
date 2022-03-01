@@ -59,7 +59,7 @@ tbody tr:nth-child(even) {
 
 .order-status.order-success {
   background-color: #DEF7EC;
-  color: var(--primary-color);
+  color: #004C00;
 }
 
 .order-status.order-pending {

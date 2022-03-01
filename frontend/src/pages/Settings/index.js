@@ -4,7 +4,12 @@ import CustomThemeContext from "../../contexts/customThemeContext";
 import UserContext from "../../contexts/userContext";
 import userService from "../../services/userService";
 import { convertTheme } from "../../utils";
-import { SettingsContainer } from "./styles";
+import {
+  SettingsContainer,
+  SettingsColorContainer,
+  SettingsSpanColor,
+  SettingsAvatarContainer
+} from "./styles";
 
 
 function Settings() {
@@ -83,37 +88,56 @@ function Settings() {
     });
   }
 
-  return (
-    <SettingsContainer>
-      <h4>Configurações de {user && user.name}</h4>
-      <form ref={formRef} encType='multipart/form-data' onSubmit={handleSubmit}>
+  function renderThemeColors() {
+    return (
+      <SettingsColorContainer>
+        <label className='colorLabel'>Tema: </label>
         <div>
-          <label>Tema: </label>
-          <div>
-            <p>
-              Cor primária: &nbsp; [<strong>{userPrimaryColor}</strong>] &nbsp;
-              <input type='color' value={userPrimaryColor} onChange={(e) => setUserPrimaryColor(e.target.value)} />
-            </p>
-            <p>
-              Cor do texto: &nbsp; [<strong>{userTextColor}</strong>] &nbsp;
-              <input type='color' value={userTextColor} onChange={(e) => setUserTextColor(e.target.value)} />
-            </p>
-          </div>
+          <label>Cor primária:</label>
+          <input type='color' value={userPrimaryColor} onChange={(e) => setUserPrimaryColor(e.target.value)} />
+          <SettingsSpanColor title={userPrimaryColor} spanColor={userPrimaryColor}>
+            {userPrimaryColor}
+          </SettingsSpanColor>
         </div>
         <div>
-          <label>Avatar: </label>
-          <div>
-            <input type='file' ref={fileRef} onChange={(e) => onFileChange(e)} accept={ACCEPTED_FILE_TYPES} />
-            <div>
-              <span>{tempFilePreview}</span>
-            </div>
-            {
-              tempFilePreview
-                ? <div><img src={tempFilePreview} style={{ width: '64px', height: '64px' }} alt='Temp File' /></div>
-                : <></>
-            }
+          <label>Cor do texto:</label>
+          <input type='color' value={userTextColor} onChange={(e) => setUserTextColor(e.target.value)} />
+          <SettingsSpanColor title={userTextColor} spanColor={userTextColor}>
+            {userTextColor}
+          </SettingsSpanColor>
+        </div>
+      </SettingsColorContainer>
+    );
+  }
 
-          </div>
+  function renderAvataSelector() {
+    return (
+      <SettingsAvatarContainer>
+        <label className='colorLabel'>Avatar: </label>
+        <div>
+          <label htmlFor='uploadFile'>Selecionar avatar</label>
+          <input id='uploadFile' type='file' ref={fileRef} onChange={(e) => onFileChange(e)} accept={ACCEPTED_FILE_TYPES} />
+          {
+            tempFilePreview
+              ? (
+                <div>
+                  <img src={tempFilePreview} style={{ width: '64px', height: '64px' }} alt='Temp File' />
+                </div>
+              )
+              : <></>
+          }
+
+        </div>
+      </SettingsAvatarContainer>
+    );
+  }
+
+  return (
+    <SettingsContainer>
+      <form ref={formRef} encType='multipart/form-data' onSubmit={handleSubmit}>
+        <div className='settingsFormContent'>
+          {renderThemeColors()}
+          {renderAvataSelector()}
         </div>
         {
           isSameData()
@@ -126,17 +150,6 @@ function Settings() {
             )
         }
       </form>
-
-      <hr />
-
-      <div style={{ backgroundColor: 'teal' }}>
-        <label>Tema atual na página: </label>
-        <div>
-          <p>Cor primária: {theme && theme.primary}</p>
-          <p>Cor do texto: {theme && theme.text}</p>
-        </div>
-        {renderAvatarUploaded()}
-      </div>
 
     </SettingsContainer >
   )
