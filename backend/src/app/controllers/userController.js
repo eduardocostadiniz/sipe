@@ -13,6 +13,32 @@ router.use(authMiddleware);
 
 const DEFAULT_AVATAR = 'http://192.168.100.62:9090/default.jpg'
 
+
+router.get('/', async (req, res) => {
+  try {
+    const {email, profile} = req;
+
+    const [result] = await dbConnection.query('select * from users where email = $1 and is_active = true', [email]);
+
+    if (!result) {
+      return res.status(400).send({ error: 'User not found!' });
+    }
+
+    const user = new User(result);
+
+    if (profile !== UserProfile.ADMIN) {
+      return res.status(401).send({ error: 'User not authorized!' });
+    }
+
+    const users = await dbConnection.query('select email, name, profile, is_active, created_at from users');
+
+    res.send({users})
+  } catch (err) {
+    console.error(err);
+    return res.status(400).send({ error: 'Get users failed' });
+  }
+});
+
 router.post('/register', async (req, res) => {
   try {
     const { email } = req.body;
@@ -44,7 +70,7 @@ router.post('/register', async (req, res) => {
 });
 
 router.get('/info', async (req, res) => {
-  const email = req.userId;
+  const email = req.email;
   const [result] = await dbConnection.query('select * from users where email = $1 and is_active = true', [email]);
 
   if (!result) {
@@ -58,7 +84,7 @@ router.get('/info', async (req, res) => {
 });
 
 router.get('/settings', async (req, res) => {
-  const email = req.userId;
+  const email = req.email;
 
   const [result] = await dbConnection.query('select theme, avatar from users where email = $1', [email]);
 
@@ -73,7 +99,7 @@ router.get('/settings', async (req, res) => {
 });
 
 router.post('/settings', multerStorage.single('userAvatar'), async (req, res) => {
-  const email = req.userId;
+  const email = req.email;
   const { theme } = req.body;
   const userAvatar = req.file;
   const fileWithPath = `http://192.168.100.62:9090/${userAvatar.filename}`;
