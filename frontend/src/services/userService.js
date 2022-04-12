@@ -1,11 +1,11 @@
 import http from "./http";
 
 export default {
-  authUser(email, password) {
-    return http.post('/auth/authenticate', { email, password });
-  },
   getUsers() {
     return http.get('/user')
+  },
+  saveUser(data) {
+    return http.post('/user/save', data)
   },
   getUserInfo() {
     return http.get('/user/info');

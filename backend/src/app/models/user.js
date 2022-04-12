@@ -1,22 +1,12 @@
-const { transformaObjectKeys, generatePassword } = require('../utils');
 
 class User {
 
   constructor(data) {
-    const dataCamelcase = transformaObjectKeys(data)
-    this.email = dataCamelcase.email;
-    this.name = dataCamelcase.name;
-    this.password = dataCamelcase.password;
-    this.avatar = dataCamelcase.avatar;
-    this.theme = dataCamelcase.theme;
-    this.profile = dataCamelcase.profile;
-    this.clientCnpj = dataCamelcase.clientCnpj;
-    this.isActive = dataCamelcase.isActive;
-    this.createdAt = dataCamelcase.createdAt;
-  }
-
-  async encryptPassword() {
-    this.password = await generatePassword(this.password);
+    this.id = data.id
+    this.name = `${data.firstName} ${data.lastName || ''}`.trim()
+    this.email = data.email;
+    this.isActive = data.enabled
+    this.createdAt = data.createdTimestamp;
   }
 
 }

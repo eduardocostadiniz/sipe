@@ -11,7 +11,7 @@
   "author": "Eduardo Costa Diniz",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
+    "axios": "^0.26.1",
     "body-parser": "^1.19.0",
     "camelcase": "^6.2.1",
     "cors": "^2.8.5",

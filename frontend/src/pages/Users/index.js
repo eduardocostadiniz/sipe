@@ -1,15 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { StatusChip } from "../../components/Chip";
 import { TableBody, TableHeader, TableWrapper } from "../../components/Table";
 import userService from "../../services/userService";
-import { UsersContainer } from "./styles";
+import { UsersContainer, UserTableActions, UsersData } from "./styles";
 
 function Users() {
-
+  let navigate = useNavigate();
   const [users, setUsers] = useState(undefined);
 
   const USERS_TABLE_HEADERS = [
-    'Nome', 'E-mail', 'Perfil', 'Status', 'Criado em'
+    'Nome', 'E-mail', 'Status', 'Criado em'
   ];
 
   useEffect(() => {
@@ -18,35 +19,43 @@ function Users() {
 
 
   async function getUsers() {
-    const {data} = await userService.getUsers();
+    const { data } = await userService.getUsers();
 
     setUsers(data.users)
   }
 
+  function onNewClientClick() {
+    navigate('/users/new')
+  }
+
   return (
     <UsersContainer>
-      <TableWrapper cardLabel='Usuários'>
-        <TableHeader headers={USERS_TABLE_HEADERS} />
-        <TableBody>
-          {
-            users && users.map(el => (
-              <tr key={el.email}>
-                <td>{el.name}</td>
-                <td>{el.email}</td>
-                <td>{el.profile}</td>
-                <td>
-                  {
-                    el.is_active
-                      ? <StatusChip chipLabel='ATIVO' status='success' />
-                      : <StatusChip chipLabel='INATIVO' status='error' />
-                  }
-                </td>
-                <td>{new Date(el.created_at).toLocaleString()}</td>
-              </tr>
-            ))
-          }
-        </TableBody>
-      </TableWrapper >
+      <UserTableActions>
+        <button onClick={onNewClientClick}>Novo Usuário</button>
+      </UserTableActions>
+      <UsersData>
+        <TableWrapper cardLabel='Usuários'>
+          <TableHeader headers={USERS_TABLE_HEADERS} />
+          <TableBody>
+            {
+              users && users.map(el => (
+                <tr key={el.id}>
+                  <td>{el.name}</td>
+                  <td>{el.email}</td>
+                  <td>
+                    {
+                      el.isActive
+                        ? <StatusChip chipLabel='ATIVO' status='success' />
+                        : <StatusChip chipLabel='INATIVO' status='error' />
+                    }
+                  </td>
+                  <td>{new Date(el.createdAt).toLocaleString()}</td>
+                </tr>
+              ))
+            }
+          </TableBody>
+        </TableWrapper >
+      </UsersData>
     </UsersContainer >
   )
 }

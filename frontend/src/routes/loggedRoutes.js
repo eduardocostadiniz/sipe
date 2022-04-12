@@ -9,6 +9,7 @@ import { Products } from '../pages/Products';
 import { Orders } from '../pages/Orders';
 import { Payments } from '../pages/Payments';
 import { Users } from '../pages/Users';
+import { NewUser } from '../pages/Users/NewUser';
 import { Settings } from '../pages/Settings';
 
 function LoggedRoutes() {
@@ -21,6 +22,7 @@ function LoggedRoutes() {
         <Route path='/orders' element={<Orders />} />
         <Route path='/payments' element={<Payments />} />
         <Route path='/users' element={<Users />} />
+        <Route path='/users/new' element={<NewUser />} />
         <Route path='/settings' element={<Settings />} />
       </Routes>
     </Container>
