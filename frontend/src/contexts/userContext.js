@@ -16,10 +16,11 @@ export const UserProvider = ({ children }) => {
     try {
       http.defaults.headers.Authorization = `Bearer ${token}`
       const result = await userService.getUserInfo();
-      const { user: userLoaded } = result.data;
 
-      setUser(userLoaded);
-      defineUserTheme(userLoaded.theme);
+      const { email, name, avatar, theme } = result.data;
+
+      setUser({ email, name, avatar });
+      defineUserTheme(theme);
     } catch (error) {
       console.error('Impossible to log in!', error);
     }

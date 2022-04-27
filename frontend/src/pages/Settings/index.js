@@ -26,7 +26,7 @@ function Settings() {
   useEffect(() => {
     async function getSettings() {
       const { data } = await userService.getSettings();
-      const { theme: userDBTheme } = data.user;
+      const { theme: userDBTheme } = data;
       const convertedTheme = convertTheme(userDBTheme);
       setUserPrimaryColor(convertedTheme.primary || '');
       setUserTextColor(convertedTheme.text || '');
@@ -77,11 +77,11 @@ function Settings() {
     formdata.append("userAvatar", fileRef.current.files[0], fileRef.current.files[0].name);
 
     userService.saveSettings(formdata).then(response => {
-      const { user: userInfo } = response.data;
+      const { email, name, avatar, theme } = response.data;
 
       restoreToCurrentValues();
-      setUser(userInfo);
-      defineUserTheme(userInfo.theme);
+      setUser({ email, name, avatar });
+      defineUserTheme(theme);
 
     }).catch(error => {
       console.error(error);

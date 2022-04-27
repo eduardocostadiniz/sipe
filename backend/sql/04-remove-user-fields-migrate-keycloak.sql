@@ -1,3 +1,5 @@
+ALTER TABLE public.users DROP COLUMN "name";
+
 ALTER TABLE public.users DROP COLUMN "password";
 
 ALTER TABLE public.users DROP COLUMN "profile";

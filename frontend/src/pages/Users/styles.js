@@ -23,6 +23,11 @@ const UserTableActions = styled.div`
     opacity: 0.8;
   }
 
+  .edit-action {
+    background-color: ${(props => props.theme.primary)};
+    color: white;
+  }
+
 `;
 
 const UsersData = styled.div`
@@ -42,9 +47,66 @@ const UserForm = styled.div`
 
     & form {
       margin: auto;
-      padding: auto;
-    }
+      padding: 5px 10px;
+      width: 320px;
 
+      & input[type="email"], & input[type="text"] {
+        height: 30px;
+        border: 2px solid ${props => props.theme.primary};
+        border-radius: 5px;
+        padding: 2px 5px 2px 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+
+      & div.group {
+        display: grid;
+        width: 100%;
+        margin-bottom: 15px;
+
+        & label:first-child {
+          font-size: 14px;
+          color: #333;
+          font-weight: 700;
+        }
+
+        & div.radio-group {
+          display: flex;
+          margin-top: 2px;
+          margin-bottom: 2px;
+
+          & div:last-child {
+            margin-left: 20px;
+          }
+
+          & label {
+            font-size: 14px;
+          }
+        }
+      }
+
+      & div.actions {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+
+        & button {
+          width: 150px;
+          height: 35px;
+          background-color: ${props => props.theme.primary};
+          color: #FFF;
+          text-align: center;
+          border: 1px solid ${props => props.theme.primary};
+          border-radius: 5px;
+        }
+
+        & button:hover {
+          opacity: 0.8;
+          cursor: pointer;
+        }
+
+      }
+    }
   }
 
 `;

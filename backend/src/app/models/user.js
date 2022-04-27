@@ -2,10 +2,12 @@
 class User {
 
   constructor(data) {
-    this.id = data.id
-    this.name = `${data.firstName} ${data.lastName || ''}`.trim()
+    this.id = data.id;
+    this.firstName = (data.firstName || '').trim();
+    this.lastName = (data.lastName || '').trim();
     this.email = data.email;
-    this.isActive = data.enabled
+    this.profile = data.profile;
+    this.isActive = data.enabled;
     this.createdAt = data.createdTimestamp;
   }
 

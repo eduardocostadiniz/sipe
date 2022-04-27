@@ -46,6 +46,24 @@ async function getUsers(accessToken, params) {
 
 }
 
+async function getUserById(accessToken, userId) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${accessToken}`
+  }
+  const path = `/auth/admin/realms/${KEYCLOAK_SIPE_REALM}/users/${userId}`
+
+  try {
+    const response = await httpKeycloak.get(path, { headers })
+
+    return response.data
+
+  } catch (error) {
+    console.log('error');
+    console.log(error);
+  }
+}
+
 async function createUser(accessToken, data) {
   const headers = {
     'Content-Type': 'application/json',
@@ -62,12 +80,44 @@ async function createUser(accessToken, data) {
   }
 }
 
+async function getUserRoles(accessToken, userId, clientId) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${accessToken}`
+  }
+  const path = `/auth/admin/realms/${KEYCLOAK_SIPE_REALM}/users/${userId}/role-mappings/clients/${clientId}`
+
+  try {
+    return await httpKeycloak.get(path, { headers })
+
+  } catch (error) {
+    console.log('error');
+    console.log(error);
+  }
+}
+
 async function listClientIdRoles(accessToken, userId, clientId) {
   const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${accessToken}`
   }
   const path = `/auth/admin/realms/${KEYCLOAK_SIPE_REALM}/users/${userId}/role-mappings/clients/${clientId}/available`
+
+  try {
+    return await httpKeycloak.get(path, { headers })
+
+  } catch (error) {
+    console.log('error');
+    console.log(error);
+  }
+}
+
+async function getUserRoles(accessToken, userId, clientId) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${accessToken}`
+  }
+  const path = `/auth/admin/realms/${KEYCLOAK_SIPE_REALM}/users/${userId}/role-mappings/clients/${clientId}`
 
   try {
     return await httpKeycloak.get(path, { headers })
@@ -97,6 +147,8 @@ async function updateUserRole(accessToken, userId, clientId, roles) {
 module.exports = {
   getToken,
   getUsers,
+  getUserById,
+  getUserRoles,
   createUser,
   listClientIdRoles,
   updateUserRole

@@ -4,17 +4,20 @@ export default {
   getUsers() {
     return http.get('/user')
   },
+  getUserById(userId) {
+    return http.get(`/user/${userId}`)
+  },
   saveUser(data) {
-    return http.post('/user/save', data)
+    return http.post('/user', data)
   },
   getUserInfo() {
-    return http.get('/user/info');
+    return http.get('/user/current/info');
   },
   getSettings() {
-    return http.get('/user/settings');
+    return http.get('/user/current/settings');
   },
   saveSettings(formData) {
     const headers = { 'Content-Type': 'multipart/form-data' }
-    return http.post('/user/settings', formData, headers);
+    return http.post('/user/current/settings', formData, headers);
   }
 }

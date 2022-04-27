@@ -10,7 +10,7 @@ function Users() {
   const [users, setUsers] = useState(undefined);
 
   const USERS_TABLE_HEADERS = [
-    'Nome', 'E-mail', 'Status', 'Criado em'
+    'Nome', 'E-mail', 'Status', 'Criado em', ''
   ];
 
   useEffect(() => {
@@ -24,14 +24,10 @@ function Users() {
     setUsers(data.users)
   }
 
-  function onNewClientClick() {
-    navigate('/users/new')
-  }
-
   return (
     <UsersContainer>
       <UserTableActions>
-        <button onClick={onNewClientClick}>Novo Usuário</button>
+        <button onClick={() => navigate('/users/new')}>Novo Usuário</button>
       </UserTableActions>
       <UsersData>
         <TableWrapper cardLabel='Usuários'>
@@ -40,7 +36,7 @@ function Users() {
             {
               users && users.map(el => (
                 <tr key={el.id}>
-                  <td>{el.name}</td>
+                  <td>{`${el.firstName} ${el.lastName || ''}`.trim()}</td>
                   <td>{el.email}</td>
                   <td>
                     {
@@ -50,6 +46,8 @@ function Users() {
                     }
                   </td>
                   <td>{new Date(el.createdAt).toLocaleString()}</td>
+                  <td>
+                    <button className='edit-action' onClick={() => navigate(`/users/${el.id}`)}>Editar</button></td>
                 </tr>
               ))
             }

@@ -18,7 +18,7 @@ const SIPE_FRONTEND_CLIENT_ID = '79c14d2f-f337-47e5-9078-5885cf832893'
 
 router.get('/', async (req, res) => {
   try {
-    const { email, profile, token } = req;
+    const { email, profile } = req;
 
     const [result] = await dbConnection.query('select * from users where email = $1', [email]);
 
@@ -35,9 +35,6 @@ router.get('/', async (req, res) => {
     const data = await keycloakService.getToken({})
     const accessToken = data['access_token']
 
-    console.log('accessToken');
-    console.log(token);
-
     const usersKC = await keycloakService.getUsers(accessToken, {})
 
     // *************
@@ -51,7 +48,42 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/save', async (req, res) => {
+
+router.get('/:id', async (req, res) => {
+  try {
+    const { email, profile } = req;
+    const { id: userId } = req.params;
+
+    const [result] = await dbConnection.query('select * from users where email = $1', [email]);
+
+    if (!result) {
+      return res.status(400).send({ error: 'User not found!' });
+    }
+
+    if (profile !== UserProfile.ADMIN) {
+      return res.status(401).send({ error: 'User not authorized!' });
+    }
+
+    // *************
+
+    const data = await keycloakService.getToken({})
+    const accessToken = data['access_token']
+    const userKC = await keycloakService.getUserById(accessToken, userId)
+    const { data: userRoleKC } = await keycloakService.getUserRoles(accessToken, userId, SIPE_FRONTEND_CLIENT_ID)
+
+    // *************
+
+    const userProfile = userRoleKC && userRoleKC[0] && userRoleKC[0].name
+    const user = new User({ ...userKC, profile: userProfile })
+
+    res.send({ ...user })
+  } catch (err) {
+    console.error(err);
+    return res.status(400).send({ error: 'Get users failed' });
+  }
+});
+
+router.post('/', async (req, res) => {
   try {
     const { profile } = req;
     const { email: formEmail, firstName, lastName, profile: role, enabled } = req.body;
@@ -125,49 +157,46 @@ router.post('/save', async (req, res) => {
   }
 });
 
-router.get('/info', async (req, res) => {
-  const email = req.email;
-  const [result] = await dbConnection.query('select * from users where email = $1', [email]);
+router.get('/current/info', async (req, res) => {
+  const loggedEmail = req.email;
+  const [result] = await dbConnection.query('select * from users where email = $1', [loggedEmail]);
 
   if (!result) {
     return res.status(400).send({ error: 'User not found!' });
   }
 
-  const user = new User(result);
-  user.password = undefined;
+  const { email, avatar, name, theme } = result;
 
-  return res.send({ user });
+  return res.send({ email, name, avatar, theme });
 });
 
-router.get('/settings', async (req, res) => {
-  const email = req.email;
+router.get('/current/settings', async (req, res) => {
+  const loggedEmail = req.email;
 
-  const [result] = await dbConnection.query('select theme, avatar from users where email = $1', [email]);
+  const [result] = await dbConnection.query('select theme, avatar from users where email = $1', [loggedEmail]);
 
   if (!result) {
     return res.status(400).send({ error: 'User does not exists!' });
   }
 
-  const user = new User(result);
-  user.password = undefined;
+  const { email, avatar, name, theme } = result;
 
-  return res.send({ user });
+  return res.send({ email, name, avatar, theme });
 });
 
-router.post('/settings', multerStorage.single('userAvatar'), async (req, res) => {
-  const email = req.email;
-  const { theme } = req.body;
+router.post('/current/settings', multerStorage.single('userAvatar'), async (req, res) => {
+  const loggedEmail = req.email;
+  const { theme: themeForm } = req.body;
   const userAvatar = req.file;
   const fileWithPath = `http://192.168.100.62:9090/${userAvatar.filename}`;
 
-  await dbConnection.none('update users set theme = $1, avatar=$2 where email = $3', [theme, fileWithPath, email]);
+  await dbConnection.none('update users set theme = $1, avatar=$2 where email = $3', [themeForm, fileWithPath, loggedEmail]);
 
-  const [result] = await dbConnection.query('select * from users where email = $1', [email]);
+  const [result] = await dbConnection.query('select * from users where email = $1', [loggedEmail]);
 
-  const user = new User(result);
-  user.password = undefined;
+  const { email, avatar, name, theme } = result;
 
-  return res.send({ user });
+  return res.send({ email, name, avatar, theme });
 });
 
 module.exports = app => app.use('/user', router);
