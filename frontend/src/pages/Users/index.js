@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import LoadingContext from "../../contexts/loadingContext";
 import { StatusChip } from "../../components/Chip";
 import { TableBody, TableHeader, TableWrapper } from "../../components/Table";
 import userService from "../../services/userService";
@@ -7,6 +8,7 @@ import { UsersContainer, UserTableActions, UsersData } from "./styles";
 
 function Users() {
   let navigate = useNavigate();
+  const { setIsLoading } = useContext(LoadingContext);
   const [users, setUsers] = useState(undefined);
 
   const USERS_TABLE_HEADERS = [
@@ -19,9 +21,14 @@ function Users() {
 
 
   async function getUsers() {
-    const { data } = await userService.getUsers();
+    try {
+      setIsLoading(true);
+      const { data } = await userService.getUsers();
+      setUsers(data.users)
 
-    setUsers(data.users)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

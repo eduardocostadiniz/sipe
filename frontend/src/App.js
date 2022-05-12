@@ -7,6 +7,7 @@ import './assets/themefy/themify-icons.css';
 import { UserProvider } from './contexts/userContext';
 import { CustomThemeProvider } from './contexts/customThemeContext';
 import { KeycloakProvider } from './contexts/keycloakContext';
+import { LoadingProvider } from './contexts/loadingContext';
 
 
 function App() {
@@ -15,13 +16,15 @@ function App() {
       <CustomThemeProvider>
         <UserProvider>
           <KeycloakProvider>
-            <BrowserRouter>
-              <Routes />
-            </BrowserRouter>
+            <LoadingProvider>
+              <BrowserRouter>
+                <Routes />
+              </BrowserRouter>
+            </LoadingProvider>
           </KeycloakProvider>
         </UserProvider>
       </CustomThemeProvider>
-    </React.StrictMode>
+    </React.StrictMode >
   )
 }
 
