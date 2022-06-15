@@ -64,6 +64,24 @@ async function getUserById(accessToken, userId) {
   }
 }
 
+async function getUserByEmail(accessToken, email) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${accessToken}`
+  }
+  const path = `/auth/admin/realms/${KEYCLOAK_SIPE_REALM}/users?email=${email}&exact=true`
+
+  try {
+    const response = await httpKeycloak.get(path, { headers })
+
+    return response.data
+
+  } catch (error) {
+    console.log('error');
+    console.log(error);
+  }
+}
+
 async function createUser(accessToken, data) {
   const headers = {
     'Content-Type': 'application/json',
@@ -148,6 +166,7 @@ module.exports = {
   getToken,
   getUsers,
   getUserById,
+  getUserByEmail,
   getUserRoles,
   createUser,
   listClientIdRoles,

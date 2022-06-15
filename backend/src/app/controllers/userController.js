@@ -159,6 +159,7 @@ router.post('/', async (req, res) => {
 
 router.get('/current/info', async (req, res) => {
   const loggedEmail = req.email;
+  const profile = req.profile;
   const [result] = await dbConnection.query('select * from users where email = $1', [loggedEmail]);
 
   if (!result) {
@@ -167,7 +168,7 @@ router.get('/current/info', async (req, res) => {
 
   const { email, avatar, name, theme } = result;
 
-  return res.send({ email, name, avatar, theme });
+  return res.send({ email, name, profile, avatar, theme });
 });
 
 router.get('/current/settings', async (req, res) => {

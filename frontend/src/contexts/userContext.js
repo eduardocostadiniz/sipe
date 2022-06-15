@@ -17,9 +17,9 @@ export const UserProvider = ({ children }) => {
       http.defaults.headers.Authorization = `Bearer ${token}`
       const result = await userService.getUserInfo();
 
-      const { email, name, avatar, theme } = result.data;
+      const { email, name, profile, avatar, theme } = result.data;
 
-      setUser({ email, name, avatar });
+      setUser({ email, name, profile, avatar });
       defineUserTheme(theme);
     } catch (error) {
       console.error('Impossible to log in!', error);

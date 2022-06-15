@@ -5,6 +5,7 @@ import { Container } from '../components/Container';
 
 import { Dashboards } from '../pages/Dashboards';
 import { Clients } from '../pages/Clients';
+import { ManageClient } from '../pages/Clients/ManageClient';
 import { Products } from '../pages/Products';
 import { Orders } from '../pages/Orders';
 import { Payments } from '../pages/Payments';
@@ -18,6 +19,7 @@ function LoggedRoutes() {
       <Routes>
         <Route path='/' element={<Dashboards />} />
         <Route path='/clients' element={<Clients />} />
+        <Route path='/clients/:id' element={<ManageClient />} />
         <Route path='/products' element={<Products />} />
         <Route path='/orders' element={<Orders />} />
         <Route path='/payments' element={<Payments />} />

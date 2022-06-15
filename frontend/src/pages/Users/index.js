@@ -54,7 +54,8 @@ function Users() {
                   </td>
                   <td>{new Date(el.createdAt).toLocaleString()}</td>
                   <td>
-                    <button className='edit-action' onClick={() => navigate(`/users/${el.id}`)}>Editar</button></td>
+                    <button className='edit-action' onClick={() => navigate(`/users/${el.id}`)}>Editar</button>
+                  </td>
                 </tr>
               ))
             }

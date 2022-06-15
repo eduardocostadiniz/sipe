@@ -57,6 +57,11 @@ const UserForm = styled.div`
         padding: 2px 5px 2px 10px;
         margin-top: 5px;
         margin-bottom: 5px;
+
+        &:disabled {
+          background-color: lightgray;
+          border: none;
+        }
       }
 
       & div.group {

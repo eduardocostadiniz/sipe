@@ -3,7 +3,7 @@ require('dotenv').config()
 const pgp = require('pg-promise');
 
 const initOptions = {
-  pgFormatting: true
+  pgFormatting: false
 }
 
 const pgConfig = {
