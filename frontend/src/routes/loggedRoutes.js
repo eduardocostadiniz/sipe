@@ -7,6 +7,7 @@ import { Dashboards } from '../pages/Dashboards';
 import { Clients } from '../pages/Clients';
 import { ManageClient } from '../pages/Clients/ManageClient';
 import { Products } from '../pages/Products';
+import { ManageProduct } from '../pages/Products/ManageProduct';
 import { Orders } from '../pages/Orders';
 import { Payments } from '../pages/Payments';
 import { Users } from '../pages/Users';
@@ -21,6 +22,7 @@ function LoggedRoutes() {
         <Route path='/clients' element={<Clients />} />
         <Route path='/clients/:id' element={<ManageClient />} />
         <Route path='/products' element={<Products />} />
+        <Route path='/products/:id' element={<ManageProduct />} />
         <Route path='/orders' element={<Orders />} />
         <Route path='/payments' element={<Payments />} />
         <Route path='/users' element={<Users />} />

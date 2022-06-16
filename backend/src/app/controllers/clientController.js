@@ -1,5 +1,4 @@
 const express = require('express');
-const pgp = require('pg-promise');
 
 const dbConnection = require('../../database');
 const authMiddleware = require('../middlewares/auth');
