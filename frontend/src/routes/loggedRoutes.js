@@ -9,6 +9,7 @@ import { ManageClient } from '../pages/Clients/ManageClient';
 import { Products } from '../pages/Products';
 import { ManageProduct } from '../pages/Products/ManageProduct';
 import { Orders } from '../pages/Orders';
+import { ManageOrder } from '../pages/Orders/ManageOrder';
 import { Payments } from '../pages/Payments';
 import { Users } from '../pages/Users';
 import { ManageUser } from '../pages/Users/ManageUser';
@@ -24,6 +25,7 @@ function LoggedRoutes() {
         <Route path='/products' element={<Products />} />
         <Route path='/products/:id' element={<ManageProduct />} />
         <Route path='/orders' element={<Orders />} />
+        <Route path='/orders/:id' element={<ManageOrder />} />
         <Route path='/payments' element={<Payments />} />
         <Route path='/users' element={<Users />} />
         <Route path='/users/:id' element={<ManageUser />} />
