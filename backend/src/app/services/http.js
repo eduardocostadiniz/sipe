@@ -1,11 +1,11 @@
 const axios = require('axios');
 
 
-const KEYCLOAK_SIPE_URL = 'http://localhost:8080'
-const KEYCLOAK_SIPE_REALM = 'sipe'
-const ADMIN_CLIENT_ID = 'sipe-backend'
-const ADMIN_CLIENT_SECRET = 'CDI1PLLtyS86tJCILgQCjMNDG0CryPVf'
 
+const KEYCLOAK_SIPE_URL = process.env.KEYCLOAK_SIPE_URL;
+const KEYCLOAK_SIPE_REALM = process.env.KEYCLOAK_SIPE_REALM;
+const ADMIN_CLIENT_ID = process.env.ADMIN_CLIENT_ID;
+const ADMIN_CLIENT_SECRET = process.env.ADMIN_CLIENT_SECRET;
 
 const httpKeycloak = axios.create({
   baseURL: KEYCLOAK_SIPE_URL

@@ -1,10 +1,9 @@
 const jwt = require('jsonwebtoken');
-const { Column } = require('pg-promise');
-const authConfig = require('../../config/auth.json');
 const { UserProfile } = require('../constants');
 
 module.exports = (req, res, next) => {
   const authHeader = req.headers.authorization;
+  const sipeFrontendClientId = process.env.SIPE_FRONTEND_CLIENT_ID;
 
   if (!authHeader) {
     console.log('Token not provided!');
@@ -31,12 +30,12 @@ module.exports = (req, res, next) => {
       return res.status(401).send({ error: 'Token is invalid!' });
     }
 
-    if (decoded.azp !== 'sipe-frontend') {
+    if (decoded.azp !== sipeFrontendClientId) {
       console.log('Invalid Requester');
       return res.status(403).send({ error: 'Invalid Requester!' });
     }
 
-    const userRoles = decoded.resource_access && decoded.resource_access['sipe-frontend'] || []
+    const userRoles = decoded.resource_access && decoded.resource_access[sipeFrontendClientId] || []
 
     if (!userRoles || !userRoles.roles || !userRoles.roles.find((role) => (role === UserProfile.USER || role === UserProfile.ADMIN))) {
       console.log('Invalid Roles');

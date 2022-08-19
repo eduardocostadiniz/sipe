@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+
+const SIPE_BACKEND_URL = process.env.SIPE_BACKEND_URL;
+
 const http = axios.create({
-  baseURL: 'http://192.168.100.62:9090',
+  baseURL: SIPE_BACKEND_URL,
   headers: {
     'Content-Type': 'application/json'
   }

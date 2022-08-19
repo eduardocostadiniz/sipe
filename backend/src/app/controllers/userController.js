@@ -12,8 +12,7 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-const DEFAULT_AVATAR = 'http://192.168.100.62:9090/default.jpg'
-const SIPE_FRONTEND_CLIENT_ID = '79c14d2f-f337-47e5-9078-5885cf832893'
+const SIPE_FRONTEND_ID = process.env.SIPE_FRONTEND_ID;
 
 
 router.get('/', async (req, res) => {
@@ -69,7 +68,7 @@ router.get('/:id', async (req, res) => {
     const data = await keycloakService.getToken({})
     const accessToken = data['access_token']
     const userKC = await keycloakService.getUserById(accessToken, userId)
-    const { data: userRoleKC } = await keycloakService.getUserRoles(accessToken, userId, SIPE_FRONTEND_CLIENT_ID)
+    const { data: userRoleKC } = await keycloakService.getUserRoles(accessToken, userId, SIPE_FRONTEND_ID)
 
     // *************
 
@@ -96,8 +95,8 @@ router.post('/', async (req, res) => {
 
     if (!result) {
       await dbConnection.none(
-        'insert into users(email, name, avatar) values($1, $2, $3)',
-        [formEmail, `${firstName} ${lastName}`, DEFAULT_AVATAR]
+        'insert into users(email, avatar) values($1, $2)',
+        [formEmail, `${firstName} ${lastName}`, '']
       )
     } else {
       console.log('User already exists!');
@@ -133,13 +132,13 @@ router.post('/', async (req, res) => {
       const locationUrl = userResponse.headers['location'].split('/')
       const userId = locationUrl[locationUrl.length - 1]
 
-      const roleResponse = await keycloakService.listClientIdRoles(accessToken, userId, SIPE_FRONTEND_CLIENT_ID)
+      const roleResponse = await keycloakService.listClientIdRoles(accessToken, userId, SIPE_FRONTEND_ID)
 
       const { data: roles } = roleResponse;
 
       const roleObj = roles.find(el => el.name === role)
 
-      await keycloakService.updateUserRole(accessToken, userId, SIPE_FRONTEND_CLIENT_ID, [roleObj])
+      await keycloakService.updateUserRole(accessToken, userId, SIPE_FRONTEND_ID, [roleObj])
 
       return res.status(201).send();
 

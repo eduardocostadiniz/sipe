@@ -1,0 +1,20 @@
+version: '3'
+
+volumes:
+  sipe-backend-volume:
+    driver: local
+
+services:
+  sipe-backend-postgres:
+    container_name: sipe-backend-postgres
+    image: postgres:14
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sipe
+      POSTGRES_USER: sipe
+      POSTGRES_PASSWORD: sipe
+    ports:
+      - 5555:5432
+    volumes: 
+      - sipe-backend-volume:/var/lib/postgresql/data
+      - ./sql/:/docker-entrypoint-initdb.d/

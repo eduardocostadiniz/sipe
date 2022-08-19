@@ -1,6 +1,10 @@
 const path = require('path');
+const dotenv = require('dotenv')
 
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+const { DefinePlugin } = require('webpack');
+
+dotenv.config()
 
 module.exports = {
   devtool: "source-map",
@@ -46,6 +50,9 @@ module.exports = {
     new HtmlWebPackPlugin({
       template: "./public/index.html",
       filename: "./index.html"
+    }),
+    new DefinePlugin({
+       'process.env': JSON.stringify(process.env)
     })
   ]
 };

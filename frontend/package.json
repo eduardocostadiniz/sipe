@@ -29,6 +29,7 @@
   "dependencies": {
     "@react-keycloak/web": "^3.4.0",
     "axios": "^0.24.0",
+    "dotenv": "^16.0.1",
     "keycloak-js": "^16.1.0",
     "react-router-dom": "^6.1.1",
     "styled-components": "^5.3.3"

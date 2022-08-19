@@ -7,3 +7,6 @@
 
 # node version manager
 .nvmrc
+
+# environment variables
+.env
