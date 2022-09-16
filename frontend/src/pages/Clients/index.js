@@ -6,6 +6,7 @@ import { StatusChip } from "../../components/Chip";
 import { TableBody, TableHeader, TableWrapper } from "../../components/Table";
 import clientService from "../../services/clientService";
 import { ClientData, ClientContainer, ClientTableActions } from "./styles";
+import { IconButton, PrimaryButton } from "../../components/Button";
 
 function Clients() {
   let navigate = useNavigate();
@@ -42,11 +43,24 @@ function Clients() {
     if (user && user.profile === 'ADMIN') {
       return (
         <ClientTableActions>
-          <button onClick={() => navigate('/clients/new')}>Novo Cliente</button>
+          <PrimaryButton label='Novo Cliente' onClick={() => navigate('/clients/new')} />
         </ClientTableActions>
       )
     }
     return <></>
+  }
+
+  function handleAdminDataAction(cnpj) {
+    if (user && user.profile === 'ADMIN') {
+      return (
+        <td>
+          <IconButton primary onClick={() => navigate(`/clients/${cnpj}`)} />
+          &nbsp;
+          <IconButton cancel iconName='ti-trash' onClick={() => { }} />
+        </td>
+      )
+    }
+    return <td></td>
   }
 
   return (
@@ -70,9 +84,7 @@ function Clients() {
                         : <StatusChip chipLabel='INATIVO' status='error' />
                     }
                   </td>
-                  <td>
-                    <button className='edit-action' onClick={() => navigate(`/clients/${el.cnpj}`)}>Editar</button>
-                  </td>
+                  {handleAdminDataAction(el.cnpj)}
                 </tr>
               ))
             }

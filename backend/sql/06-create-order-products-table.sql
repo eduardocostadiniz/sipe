@@ -14,6 +14,8 @@ create table orders (
 create table order_products (
   order_id int not null,
   product_id int not null,
+  product_qty int not null,
+  product_value numeric not null,
   primary key(order_id, product_id),
   constraint fk_order_id foreign key(order_id) references orders(id),
   constraint fk_product_id foreign key(product_id) references products(id)

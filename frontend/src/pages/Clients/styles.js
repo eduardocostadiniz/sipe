@@ -11,19 +11,6 @@ const ClientTableActions = styled.div`
   display: flex;
   justify-content: right;
 
-  & button {
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    cursor: pointer;
-    background-color: ${(props => props.theme.primary)};
-    color: white;
-  }
-
-  &:hover {
-    opacity: 0.8;
-  }
-
   .edit-action {
     background-color: ${(props => props.theme.primary)};
     color: white;

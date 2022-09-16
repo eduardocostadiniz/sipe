@@ -6,6 +6,7 @@ import { StatusChip } from "../../components/Chip";
 import { TableBody, TableHeader, TableWrapper } from "../../components/Table";
 import productService from "../../services/productService";
 import { ProductData, ProductContainer, ProductTableActions } from "./styles";
+import { IconButton } from "../../components/Button";
 
 function Products() {
   let navigate = useNavigate();
@@ -49,6 +50,19 @@ function Products() {
     return <></>
   }
 
+  function handleAdminDataAction(productId) {
+    if (user && user.profile === 'ADMIN') {
+      return (
+        <td>
+          <IconButton primary onClick={() => navigate(`/products/${productId}`)} />
+          &nbsp;
+          <IconButton cancel iconName='ti-trash' onClick={() => { }} />
+        </td>
+      )
+    }
+    return <td></td>
+  }
+
   function handlePrice(price) {
     return `R$ ${Number(price).toFixed(2).replace('.', ',')}`;
   }
@@ -76,9 +90,7 @@ function Products() {
                         : <StatusChip chipLabel='INATIVO' status='error' />
                     }
                   </td>
-                  <td>
-                    <button className='edit-action' onClick={() => navigate(`/products/${el.id}`)}>Editar</button>
-                  </td>
+                  {handleAdminDataAction(el.id)}
                 </tr>
               ))
             }

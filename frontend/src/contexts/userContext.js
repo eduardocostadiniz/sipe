@@ -1,5 +1,4 @@
-// import { useKeycloak } from "@react-keycloak/web";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import http from "../services/http";
 import userService from "../services/userService";
 import CustomThemeContext from "./customThemeContext";

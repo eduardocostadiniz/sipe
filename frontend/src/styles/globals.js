@@ -11,6 +11,7 @@ html, body {
   color: ${props => props.theme.text};
   width: 100%;
   height: 100%;
+  font-size: 14px;
 }
 
 .order-last-activity {

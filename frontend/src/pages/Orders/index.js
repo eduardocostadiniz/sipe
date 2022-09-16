@@ -6,6 +6,7 @@ import { StatusChip } from "../../components/Chip";
 import { TableBody, TableHeader, TableWrapper } from "../../components/Table";
 import orderService from "../../services/orderService";
 import { OrderData, OrderContainer, OrderTableActions } from "./styles";
+import { IconButton } from "../../components/Button";
 
 function Orders() {
   let navigate = useNavigate();
@@ -38,24 +39,12 @@ function Orders() {
     }
   }
 
-  function handleAdminOrderAction() {
-    if (user && user.profile === 'ADMIN') {
-      return (
-        <OrderTableActions>
-          <button onClick={() => navigate('/orders/new')}>Novo Pedido</button>
-        </OrderTableActions>
-      )
-    }
-    return <></>
-  }
-
   function handleAmount(amount) {
     return `R$ ${Number(amount).toFixed(2).replace('.', ',')}`;
   }
 
   return (
     <OrderContainer>
-      {handleAdminOrderAction()}
       <OrderData>
         <TableWrapper cardLabel='Pedidos'>
           <TableHeader headers={ORDERS_TABLE_HEADERS} />
@@ -71,7 +60,7 @@ function Orders() {
                     <StatusChip chipLabel={el.status} />
                   </td>
                   <td>
-                    <button className='edit-action' onClick={() => navigate(`/orders/${el.id}`)}>Editar</button>
+                    <IconButton iconName='ti-eye' label='detalhes' onClick={() => navigate(`/orders/${el.id}`)} />
                   </td>
                 </tr>
               ))

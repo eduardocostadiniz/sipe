@@ -48,69 +48,26 @@ router.get('/', async (req, res) => {
 });
 
 
-// router.get('/:id', async (req, res) => {
-//   try {
-//     const { email, profile } = req;
-//     const { id: cnpj } = req.params;
+router.get('/:id', async (req, res) => {
+  try {
+    const { email } = req;
+    const { id: orderId } = req.params;
 
-//     const [result] = await dbConnection.query('select * from users where email = $1', [email]);
+    const [result] = await dbConnection.query('select * from users where email = $1', [email]);
 
-//     if (!result) {
-//       return res.status(400).send({ error: 'User not found!' });
-//     }
+    if (!result) {
+      return res.status(400).send({ error: 'User not found!' });
+    }
+    const [order] = await dbConnection.query(`select * from orders where id = $1`, [orderId]);
+    const products = await dbConnection.query(`select p.*, op.product_qty, op.product_value from products p inner join order_products op on op.product_id = p.id and op.order_id = $1`, [orderId]);
 
-//     if (profile !== UserProfile.ADMIN) {
-//       return res.status(401).send({ error: 'User not authorized!' });
-//     }
+    order['products'] = products || [];
 
-//     const [client] = await dbConnection.query(`select * from clients where cnpj = $1`, [cnpj]);
-
-//     res.send({ client });
-//   } catch (err) {
-//     console.error(err);
-//     return res.status(400).send({ error: 'Get user failed' });
-//   }
-// });
-
-// router.post('/', async (req, res) => {
-//   try {
-//     const { email: userEmail, profile } = req;
-//     const { cnpj, name, trademark, email, phone, isActive } = req.body;
-
-//     console.log({ cnpj, name, trademark, email, phone, isActive });
-
-//     const [usr] = await dbConnection.query('select * from users where email = $1', [userEmail]);
-//     if (!usr) {
-//       return res.status(400).send({ error: 'User not found!' });
-//     }
-
-//     if (profile !== UserProfile.ADMIN) {
-//       return res.status(401).send({ error: 'User not authorized!' });
-//     }
-
-//     const [result] = await dbConnection.query('select * from clients where cnpj = $1', [cnpj]);
-
-//     console.log('\nresult');
-//     console.log(result);
-
-//     if (!result) {
-//       await dbConnection.none(
-//         'insert into clients (cnpj, name, trademark, email, phone, is_active) values ($1, $2, $3, $4, $5, $6)',
-//         [cnpj, name, trademark, email, phone, isActive]
-//       )
-//     } else {
-//       await dbConnection.none(
-//         'update clients set name = $1, trademark = $2, email = $3, phone = $4, is_active = $5 where cnpj = $6',
-//         [name, trademark, email, phone, isActive, cnpj]
-//       )
-//     }
-
-//     return res.send({});
-
-//   } catch (err) {
-//     console.error(err);
-//     return res.status(400).send({ error: 'Registration failed' });
-//   }
-// });
+    res.send({ order });
+  } catch (err) {
+    console.error(err);
+    return res.status(400).send({ error: 'Get order and products failed' });
+  }
+});
 
 module.exports = app => app.use('/order', router);

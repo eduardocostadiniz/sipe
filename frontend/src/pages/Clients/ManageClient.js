@@ -29,9 +29,10 @@ function ManageClient() {
           setEmail(clientEmail)
           setPhone(clientPhone)
           setEnabled(isActive)
+          setIsLoading(false)
+
         } catch (err) {
           console.log(err);
-        } finally {
           setIsLoading(false)
         }
       }
@@ -39,15 +40,19 @@ function ManageClient() {
     getClientByCnpj()
 
     return () => {
-      setCnpj('')
-      setName('')
-      setTrademark('')
-      setEmail('')
-      setPhone('')
-      setEnabled(true)
+      clearFields()
     }
   }, [id]);
 
+
+  function clearFields() {
+    setCnpj('')
+    setName('')
+    setTrademark('')
+    setEmail('')
+    setPhone('')
+    setEnabled(true)
+  }
 
   async function handleFormSubmit(event) {
     event.preventDefault()
@@ -65,9 +70,13 @@ function ManageClient() {
       }
 
       await clientService.saveClient(data)
+
+      setIsLoading(false);
+      clearFields()
+      setTimeout(() => navigate('/clients'), 2000);
+
     } catch (err) {
       console.log(err);
-    } finally {
       setIsLoading(false);
     }
   }

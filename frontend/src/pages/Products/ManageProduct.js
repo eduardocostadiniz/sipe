@@ -38,14 +38,17 @@ function ManageProduct() {
     getProductById()
 
     return () => {
-      setName('')
-      setDescription('')
-      setPrice(0.0)
-      setImgUrl('')
-      setEnabled('')
+      clearFields()
     }
   }, [id]);
 
+  function clearFields() {
+    setName('')
+    setDescription('')
+    setPrice(0.0)
+    setImgUrl('')
+    setEnabled('')
+  }
 
   async function handleFormSubmit(event) {
     event.preventDefault()
@@ -63,6 +66,9 @@ function ManageProduct() {
       }
 
       await productService.saveProduct(data)
+      clearFields()
+      setTimeout(() => navigate('/products'), 2000);
+
     } catch (err) {
       console.log(err);
     } finally {

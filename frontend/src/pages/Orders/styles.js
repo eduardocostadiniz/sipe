@@ -42,91 +42,63 @@ const OrderData = styled.div`
   }
 `;
 
-const OrderForm = styled.div`
-background-color: white;
-padding: 15px;
+const OrderDetailContainer = styled.div`
+  background-color: white;
+  padding: 15px;
 
-& h3 {
-  text-align: center;
-}
+  & div.order-detail-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    font-size: 14px;
 
-& div#order-form {
-  display: flex;
+    & div {
+      padding-top: 5px;
+      padding-bottom: 5px;
 
-  & form {
-    margin: auto;
-    padding: 5px 10px;
-    width: 320px;
+      & span {
+        font-weight: bolder;
+        color: ${props => props.theme.primary}
+      }
 
-    & input[type="email"], & input[type="text"], & input[type="number"], & input[type="url"] {
-      height: 30px;
-      border: 2px solid ${props => props.theme.primary};
-      border-radius: 5px;
-      padding: 2px 5px 2px 10px;
-      margin-top: 5px;
-      margin-bottom: 5px;
-    }
-
-    & textarea {
-      border: 2px solid ${props => props.theme.primary};
-      border-radius: 5px;
-      padding: 2px 5px 2px 10px;
-      margin-top: 5px;
-      margin-bottom: 5px;
-    }
-
-    & div.group {
-      display: grid;
-      width: 100%;
-      margin-bottom: 15px;
-
-      & label:first-child {
-        font-size: 14px;
-        color: #333;
+      & label.order-detail-item-title {
         font-weight: 700;
+        margin-left: 5px;
+        color: ${props => props.theme.primary}
       }
 
-      & div.radio-group {
-        display: flex;
-        margin-top: 2px;
-        margin-bottom: 2px;
-
-        & div:last-child {
-          margin-left: 20px;
-        }
-
-        & label {
-          font-size: 14px;
-        }
+      & label.order-detail-item-value {
+        color:#333;
+        margin-left: 5px;
       }
-    }
-
-    & div.actions {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 20px;
-
-      & button {
-        width: 150px;
-        height: 35px;
-        background-color: ${props => props.theme.primary};
-        color: #FFF;
-        text-align: center;
-        border: 1px solid ${props => props.theme.primary};
-        border-radius: 5px;
-      }
-
-      & button:hover {
-        opacity: 0.8;
-        cursor: pointer;
-      }
-
     }
   }
-}
+`;
 
+const OrderDetailProducts = styled.div`
+  background-color: #EEEEEE;
+  border-radius: 5px;
+  padding: 5px;
+  margin-top: 10px;
+`;
+
+const OrderDetailProductCard = styled.div`
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px 5px;
+  margin: 10px 0px;
+  color: #333;
+
+  & div {
+    display: flex;
+    justify-content: space-between;
+
+    & div label {
+      color: ${props => props.theme.primary};
+      margin-right: 5px;
+    }
+  }
 `;
 
 export {
-  OrderContainer, OrderTableActions, OrderData, OrderForm
+  OrderContainer, OrderTableActions, OrderData, OrderDetailContainer, OrderDetailProducts, OrderDetailProductCard
 };
