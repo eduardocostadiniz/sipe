@@ -8,8 +8,5 @@
 # environment variables
 .env
 
-# node version manager
-.nvmrc
-
 # uploaded files
 /sipe-uploads
