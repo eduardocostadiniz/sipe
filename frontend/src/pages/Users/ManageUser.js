@@ -5,8 +5,7 @@ import { UserForm } from "./styles";
 
 function ManageUser() {
   const [email, setEmail] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
+  const [name, setName] = useState('')
   const [profile, setProfile] = useState('')
   const [enabled, setEnabled] = useState(false)
   let { id } = useParams();
@@ -16,11 +15,10 @@ function ManageUser() {
     async function getUserById() {
       if (id !== 'new') {
         const { data } = await userService.getUserById(id);
-        const { firstName, lastName, email: userEmail, profile: userProfile, isActive } = data;
+        const { name, email: userEmail, profile: userProfile, isActive } = data;
 
         setEmail(userEmail)
-        setFirstName(firstName)
-        setLastName(lastName)
+        setName(name)
         setProfile(userProfile)
         setEnabled(isActive)
       }
@@ -29,8 +27,7 @@ function ManageUser() {
 
     return () => {
       setEmail('')
-      setFirstName('')
-      setLastName('')
+      setName('')
       setProfile('')
       setEnabled(false)
     }
@@ -42,8 +39,7 @@ function ManageUser() {
 
     const data = {
       email,
-      firstName,
-      lastName,
+      name,
       profile,
       enabled
     }
@@ -61,12 +57,8 @@ function ManageUser() {
             <input type='email' id='email' placeholder='E-mail' value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div className='group'>
-            <label htmlFor='first-name'>Primeiro nome</label>
-            <input type='text' id='first-name' placeholder='Primeiro nome' value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-          </div>
-          <div className='group'>
-            <label htmlFor='last-name'>Último nome</label>
-            <input type='text' id='last-name' placeholder='Último nome' value={lastName} onChange={(e) => setLastName(e.target.value)} />
+            <label htmlFor='full-name'>Nome</label>
+            <input type='text' id='full-name' placeholder='Nome Completo' value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className='group'>
             <label>Perfil de acesso</label>

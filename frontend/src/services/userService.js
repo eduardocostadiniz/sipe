@@ -16,8 +16,7 @@ export default {
   getSettings() {
     return http.get('/user/current/settings');
   },
-  saveSettings(formData) {
-    const headers = { 'Content-Type': 'multipart/form-data' }
-    return http.post('/user/current/settings', formData, headers);
+  saveSettings(data) {
+    return http.post('/user/current/settings', data);
   }
 }

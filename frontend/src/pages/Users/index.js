@@ -43,7 +43,7 @@ function Users() {
             {
               users && users.map(el => (
                 <tr key={el.id}>
-                  <td>{`${el.firstName} ${el.lastName || ''}`.trim()}</td>
+                  <td>{el.name.trim()}</td>
                   <td>{el.email}</td>
                   <td>
                     {

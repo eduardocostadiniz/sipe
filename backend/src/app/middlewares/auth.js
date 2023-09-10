@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
-const { UserProfile } = require('../constants');
 
 
 const auth0 = jwksClient({
@@ -36,10 +35,6 @@ module.exports = async (req, res, next) => {
   }
 
   const tokenDecoded = await jwt.decode(token, {complete: true})
-
-  console.log('tokenDecoded');
-  console.log(tokenDecoded);
-
   const tokenKid = tokenDecoded.header.kid
   const publicKey = await getPublicKey(tokenKid)
 
@@ -55,18 +50,7 @@ module.exports = async (req, res, next) => {
       return res.status(403).send({ error: 'Invalid Requester!' });
     }
 
-    // const userRoles = decoded.resource_access && decoded.resource_access[sipeFrontendClientId] || []
-
-    // if (!userRoles || !userRoles.roles || !userRoles.roles.find((role) => (role === UserProfile.USER || role === UserProfile.ADMIN))) {
-    //   console.log('Invalid Roles');
-    //   return res.status(403).send({ error: 'Invalid Roles!' });
-    // }
-
-    // req.email = decoded.email;
-    // req.profile = userRoles.roles[0]
-
-    req.email = 'eduardo.diniz@sipe.com.br';
-    req.profile = 'ADMIN'
+    req.email = decoded.email || ''
 
     return next();
   })

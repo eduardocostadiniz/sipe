@@ -2,13 +2,14 @@
 class User {
 
   constructor(data) {
-    this.id = data.id;
-    this.firstName = (data.firstName || '').trim();
-    this.lastName = (data.lastName || '').trim();
+    this.id = data.user_id;
+    this.name = data.name;
     this.email = data.email;
-    this.profile = data.profile;
-    this.isActive = data.enabled;
-    this.createdAt = data.createdTimestamp;
+    this.isActive = !data.blocked;
+    this.createdAt = data.created_at;
+    this.userMetadata = data.user_metadata;
+    this.profile = (data.user_metadata && data.user_metadata.sipe && data.user_metadata.sipe.perfil) || '';
+    this.cnpjs = (data.user_metadata && data.user_metadata.sipe && data.user_metadata.sipe.cnpjs) || '';
   }
 
 }

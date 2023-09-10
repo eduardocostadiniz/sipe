@@ -1,22 +1,20 @@
 const express = require('express');
+const { uuid } = require('uuidv4');
 
 const dbConnection = require('../../database');
 const authMiddleware = require('../middlewares/auth');
+const auth0Service = require('../services/auth0');
 const User = require('../models/user');
-const { UserProfile } = require('../constants');
-const { generateToken } = require('../utils');
-const multerStorage = require('../modules/multer');
+const { UserProfile, UserAttributes } = require('../constants');
 
 const router = express.Router();
 
 router.use(authMiddleware);
 
-const SIPE_FRONTEND_ID = process.env.SIPE_FRONTEND_ID;
-
 
 router.get('/', async (req, res) => {
   try {
-    const { email, profile } = req;
+    const { email } = req;
 
     const [result] = await dbConnection.query('select * from users where email = $1', [email]);
 
@@ -24,20 +22,18 @@ router.get('/', async (req, res) => {
       return res.status(400).send({ error: 'User not found!' });
     }
 
+    const data = await auth0Service.getAdminToken()
+    const accessToken = data['access_token']
+
+    const [auth0User] = await auth0Service.getUserByEmail(accessToken, email);
+    const userMetadata = auth0User.user_metadata || {}
+    const profile = userMetadata.sipe && userMetadata.sipe.perfil || ''
     if (profile !== UserProfile.ADMIN) {
       return res.status(401).send({ error: 'User not authorized!' });
     }
 
-    // *************
-
-    const data = await keycloakService.getToken({})
-    const accessToken = data['access_token']
-
-    const usersKC = await keycloakService.getUsers(accessToken, {})
-
-    // *************
-
-    const users = usersKC.map(item => new User(item))
+    const auth0Users = await auth0Service.getUsers(accessToken, {})
+    const users = auth0Users.map(item => new User(item))
 
     res.send({ users })
   } catch (err) {
@@ -49,7 +45,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const { email, profile } = req;
+    const { email } = req;
     const { id: userId } = req.params;
 
     const [result] = await dbConnection.query('select * from users where email = $1', [email]);
@@ -58,23 +54,24 @@ router.get('/:id', async (req, res) => {
       return res.status(400).send({ error: 'User not found!' });
     }
 
+    const data = await auth0Service.getAdminToken()
+    const accessToken = data['access_token']
+
+    const [auth0User] = await auth0Service.getUserByEmail(accessToken, email);
+    const userMetadata = auth0User.user_metadata || {}
+    const profile = userMetadata.sipe && userMetadata.sipe.perfil || ''
     if (profile !== UserProfile.ADMIN) {
       return res.status(401).send({ error: 'User not authorized!' });
     }
 
-    // *************
+    const user = await auth0Service.getUserById(accessToken, userId)
 
-    const data = await keycloakService.getToken({})
-    const accessToken = data['access_token']
-    const userKC = await keycloakService.getUserById(accessToken, userId)
-    const { data: userRoleKC } = await keycloakService.getUserRoles(accessToken, userId, SIPE_FRONTEND_ID)
+    console.log('user');
+    console.log(user);
 
-    // *************
+    const searchedUser = new User(user)
 
-    const userProfile = userRoleKC && userRoleKC[0] && userRoleKC[0].name
-    const user = new User({ ...userKC, profile: userProfile })
-
-    res.send({ ...user })
+    res.send({ ...searchedUser })
   } catch (err) {
     console.error(err);
     return res.status(400).send({ error: 'Get users failed' });
@@ -83,71 +80,68 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { profile } = req;
-    const { email: formEmail, firstName, lastName, profile: role, enabled } = req.body;
+    const { email: userEmail } = req;
+    const { email: formEmail, name, profile: role, enabled } = req.body;
 
-    const [result] = await dbConnection.query('select * from users where email = $1', [formEmail]);
+    const data = await auth0Service.getAdminToken()
+    const accessToken = data['access_token']
+
+    const [auth0User] = await auth0Service.getUserByEmail(accessToken, userEmail);
+    const userMetadata = auth0User.user_metadata || {}
+    const profile = userMetadata.sipe && userMetadata.sipe.perfil || ''
 
     if (profile !== UserProfile.ADMIN) {
       return res.status(401).send({ error: 'User not authorized!' });
     }
 
+    const [result] = await dbConnection.query('select * from users where email = $1', [formEmail]);
     if (!result) {
       await dbConnection.none(
         'insert into users(email, avatar) values($1, $2)',
-        [formEmail, `${firstName} ${lastName}`, '']
+        [formEmail, '']
       )
     } else {
       console.log('User already exists!');
     }
 
-    // *************
+    let [formUser] = await auth0Service.getUserByEmail(accessToken, formEmail)
 
-    const data = await keycloakService.getToken({})
-    const accessToken = data['access_token']
-
-    const params = {
-      exact: true,
-      email: formEmail
-    }
-
-    let userKc = await keycloakService.getUsers(accessToken, params)
-
-    if (!userKc.length) {
+    if (!formUser) {
       const data = {
-        username: formEmail,
         email: formEmail,
-        firstName,
-        lastName,
-        enabled,
-        requiredActions: ['UPDATE_PASSWORD'],
-        attributes: {
-          clientCnpj: '12345678000125'
-        }
-      };
-
-      const userResponse = await keycloakService.createUser(accessToken, data)
-
-      const locationUrl = userResponse.headers['location'].split('/')
-      const userId = locationUrl[locationUrl.length - 1]
-
-      const roleResponse = await keycloakService.listClientIdRoles(accessToken, userId, SIPE_FRONTEND_ID)
-
-      const { data: roles } = roleResponse;
-
-      const roleObj = roles.find(el => el.name === role)
-
-      await keycloakService.updateUserRole(accessToken, userId, SIPE_FRONTEND_ID, [roleObj])
-
-      return res.status(201).send();
-
+        user_metadata: {
+          sipe: {
+            perfil: role,
+            cnpjs: '12345678000125'
+          }
+        },
+        name,
+        blocked: !enabled,
+        picture: UserAttributes.DEFAULT_AVATAR,
+        connection: UserAttributes.DEFAULT_CONNECTION,
+        password: uuid()
+      }
+      await auth0Service.createUser(accessToken, data)
     } else {
+      const data = {
+        email: formEmail,
+        user_metadata: {
+          sipe: {
+            perfil: role,
+            cnpjs: '12345678000125'
+          }
+        },
+        name,
+        blocked: !enabled
+      }
 
+      console.log('formUser.user_id, data');
+      console.log(formUser.user_id, data);
+
+      await auth0Service.updateUser(accessToken, formUser.user_id, data)
     }
 
-    // *************
-
-    return res.send({ userKc });
+    return res.status(201).send();
 
   } catch (err) {
     console.error(err);
@@ -157,14 +151,21 @@ router.post('/', async (req, res) => {
 
 router.get('/current/info', async (req, res) => {
   const loggedEmail = req.email;
-  const profile = req.profile;
   const [result] = await dbConnection.query('select * from users where email = $1', [loggedEmail]);
 
   if (!result) {
     return res.status(400).send({ error: 'User not found!' });
   }
 
-  const { email, avatar, name, theme } = result;
+  const data = await auth0Service.getAdminToken()
+  const accessToken = data['access_token']
+
+  const [auth0User] = await auth0Service.getUserByEmail(accessToken, loggedEmail);
+  const userMetadata = auth0User.user_metadata || {}
+  const profile = userMetadata.sipe && userMetadata.sipe.perfil || ''
+  const name = auth0User.name
+
+  const { email, avatar, theme } = result;
 
   return res.send({ email, name, profile, avatar, theme });
 });
@@ -178,24 +179,23 @@ router.get('/current/settings', async (req, res) => {
     return res.status(400).send({ error: 'User does not exists!' });
   }
 
-  const { email, avatar, name, theme } = result;
+  const { avatar, theme } = result;
 
-  return res.send({ email, name, avatar, theme });
+  return res.send({ avatar, theme });
 });
 
-router.post('/current/settings', multerStorage.single('userAvatar'), async (req, res) => {
+router.post('/current/settings', async (req, res) => {
   const loggedEmail = req.email;
-  const { theme: themeForm } = req.body;
-  const userAvatar = req.file;
-  const fileWithPath = `http://192.168.100.62:9090/${userAvatar.filename}`;
+  const { theme: themeForm, avatar: userAvatar } = req.body;
 
-  await dbConnection.none('update users set theme = $1, avatar=$2 where email = $3', [themeForm, fileWithPath, loggedEmail]);
 
-  const [result] = await dbConnection.query('select * from users where email = $1', [loggedEmail]);
+  await dbConnection.none('update users set theme = $1, avatar=$2 where email = $3', [themeForm, userAvatar, loggedEmail]);
 
-  const { email, avatar, name, theme } = result;
+  const [result] = await dbConnection.query('select theme, avatar from users where email = $1', [loggedEmail]);
 
-  return res.send({ email, name, avatar, theme });
+  const { avatar, theme } = result;
+
+  return res.send({ avatar, theme });
 });
 
 module.exports = app => app.use('/user', router);

@@ -3,6 +3,7 @@ const express = require('express');
 const dbConnection = require('../../database');
 const authMiddleware = require('../middlewares/auth');
 const { UserProfile } = require('../constants');
+const auth0Service = require('../services/auth0');
 
 const router = express.Router();
 
@@ -10,32 +11,26 @@ router.use(authMiddleware);
 
 router.get('/', async (req, res) => {
   try {
-    const { email, profile } = req;
+    const { email } = req;
 
     const [result] = await dbConnection.query('select * from users where email = $1', [email]);
     if (!result) {
       return res.status(400).send({ error: 'User not found!' });
     }
 
-    const data = await keycloakService.getToken({})
+    const data = await auth0Service.getAdminToken()
     const accessToken = data['access_token']
 
-    const [kcUser] = await keycloakService.getUserByEmail(accessToken, email);
-    const user = await keycloakService.getUserById(accessToken, kcUser.id);
+    const [auth0User] = await auth0Service.getUserByEmail(accessToken, email);
+    const userMetadata = auth0User.user_metadata || {}
+    const profile = userMetadata.sipe && userMetadata.sipe.perfil || ''
+    const allowedClients = (userMetadata.sipe && userMetadata.sipe.cnpj || '').split(',')
     let clients = []
 
     if (profile === UserProfile.ADMIN) {
       clients = await dbConnection.query('select * from clients');
     } else {
-      let allowedClients = [];
-      try {
-        allowedClients = user.attributes.clientCnpj[0].split(';')
-        console.log(`\nAllowed to ${allowedClients}`);
-      } catch (err) {
-        console.error(`Get allowed clients to user ${email} : ${user.attributes}`)
-        console.error(err);
-      }
-
+      console.log(`\nAllowed to ${allowedClients}`);
       clients = await dbConnection.any(`select * from clients where cnpj in ($1:list)`, [allowedClients]);
     }
 
@@ -51,7 +46,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const { email, profile } = req;
+    const { email } = req;
     const { id: cnpj } = req.params;
 
     const [result] = await dbConnection.query('select * from users where email = $1', [email]);
@@ -59,6 +54,13 @@ router.get('/:id', async (req, res) => {
     if (!result) {
       return res.status(400).send({ error: 'User not found!' });
     }
+
+    const data = await auth0Service.getAdminToken()
+    const accessToken = data['access_token']
+
+    const [auth0User] = await auth0Service.getUserByEmail(accessToken, email);
+    const userMetadata = auth0User.user_metadata || {}
+    const profile = userMetadata.sipe && userMetadata.sipe.perfil || ''
 
     if (profile !== UserProfile.ADMIN) {
       return res.status(401).send({ error: 'User not authorized!' });
@@ -75,7 +77,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { email: userEmail, profile } = req;
+    const { email: userEmail } = req;
     const { cnpj, name, trademark, email, phone, isActive } = req.body;
 
     console.log({ cnpj, name, trademark, email, phone, isActive });
@@ -84,6 +86,13 @@ router.post('/', async (req, res) => {
     if (!usr) {
       return res.status(400).send({ error: 'User not found!' });
     }
+
+    const data = await auth0Service.getAdminToken()
+    const accessToken = data['access_token']
+
+    const [auth0User] = await auth0Service.getUserByEmail(accessToken, userEmail);
+    const userMetadata = auth0User.user_metadata || {}
+    const profile = userMetadata.sipe && userMetadata.sipe.perfil || ''
 
     if (profile !== UserProfile.ADMIN) {
       return res.status(401).send({ error: 'User not authorized!' });

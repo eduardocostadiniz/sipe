@@ -17,9 +17,8 @@ export const UserProvider = ({ children }) => {
       const result = await userService.getUserInfo();
 
       const { email, name, profile, avatar, theme } = result.data;
-      const avatarPath = `${process.env.SIPE_BACKEND_URL}/${avatar}`
 
-      setUser({ email, name, profile, avatar: avatarPath });
+      setUser({ email, name, profile, avatar });
       defineUserTheme(theme);
     } catch (error) {
       console.error('Impossible to log in!', error);

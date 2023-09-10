@@ -3,6 +3,7 @@ const express = require('express');
 const dbConnection = require('../../database');
 const authMiddleware = require('../middlewares/auth');
 const { UserProfile } = require('../constants');
+const auth0Service = require('../services/auth0');
 
 const router = express.Router();
 
@@ -31,7 +32,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const { email, profile } = req;
+    const { email } = req;
     const { id } = req.params;
 
     const [result] = await dbConnection.query('select * from users where email = $1', [email]);
@@ -39,6 +40,13 @@ router.get('/:id', async (req, res) => {
     if (!result) {
       return res.status(400).send({ error: 'User not found!' });
     }
+
+    const data = await auth0Service.getAdminToken()
+    const accessToken = data['access_token']
+
+    const [auth0User] = await auth0Service.getUserByEmail(accessToken, email);
+    const userMetadata = auth0User.user_metadata || {}
+    const profile = userMetadata.sipe && userMetadata.sipe.perfil || ''
 
     if (profile !== UserProfile.ADMIN) {
       return res.status(401).send({ error: 'User not authorized!' });
@@ -55,13 +63,20 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { email: userEmail, profile } = req;
+    const { email: userEmail } = req;
     const { id, name, description, price, imgUrl, isActive } = req.body;
 
     const [usr] = await dbConnection.query('select * from users where email = $1', [userEmail]);
     if (!usr) {
       return res.status(400).send({ error: 'User not found!' });
     }
+
+    const data = await auth0Service.getAdminToken()
+    const accessToken = data['access_token']
+
+    const [auth0User] = await auth0Service.getUserByEmail(accessToken, userEmail);
+    const userMetadata = auth0User.user_metadata || {}
+    const profile = userMetadata.sipe && userMetadata.sipe.perfil || ''
 
     if (profile !== UserProfile.ADMIN) {
       return res.status(401).send({ error: 'User not authorized!' });

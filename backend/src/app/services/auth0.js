@@ -2,7 +2,7 @@ const qs = require('qs');
 
 const { httpAuth0, AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET } = require("./http");
 
-async function getAdminToken(credentials) {
+async function getAdminToken() {
   const headers = {
     'Content-Type': 'application/json'
   }
@@ -24,76 +24,90 @@ async function getAdminToken(credentials) {
   }
 }
 
-// async function getUsers(accessToken, params) {
-//   const headers = {
-//     'Content-Type': 'application/json',
-//     'Authorization': `Bearer ${accessToken}`
-//   }
-//   const path = `/auth/admin/realms/${KEYCLOAK_SIPE_REALM}/users`
+async function getUsers(accessToken, params) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${accessToken}`
+  }
 
-//   try {
-//     const response = await httpKeycloak.get(path, { headers, params })
+  try {
+    const response = await httpAuth0.get('/api/v2/users', { headers, params })
 
-//     return response.data
+    return response.data
 
-//   } catch (error) {
-//     console.log('error');
-//     console.log(error);
-//   }
+  } catch (error) {
+    console.log('error');
+    console.log(error);
+  }
 
-// }
+}
 
-// async function getUserById(accessToken, userId) {
-//   const headers = {
-//     'Content-Type': 'application/json',
-//     'Authorization': `Bearer ${accessToken}`
-//   }
-//   const path = `/auth/admin/realms/${KEYCLOAK_SIPE_REALM}/users/${userId}`
+async function getUserById(accessToken, userId) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${accessToken}`
+  }
+  const path = `/api/v2/users/${userId}`
 
-//   try {
-//     const response = await httpKeycloak.get(path, { headers })
+  try {
+    const response = await httpAuth0.get(path, { headers })
 
-//     return response.data
+    return response.data
 
-//   } catch (error) {
-//     console.log('error');
-//     console.log(error);
-//   }
-// }
+  } catch (error) {
+    console.log('error');
+    console.log(error);
+  }
+}
 
-// async function getUserByEmail(accessToken, email) {
-//   const headers = {
-//     'Content-Type': 'application/json',
-//     'Authorization': `Bearer ${accessToken}`
-//   }
-//   const path = `/auth/admin/realms/${KEYCLOAK_SIPE_REALM}/users?email=${email}&exact=true`
+async function getUserByEmail(accessToken, email) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${accessToken}`
+  }
+  const path = `/api/v2/users?q=email.raw=${email}&search_engine=v2`
 
-//   try {
-//     const response = await httpKeycloak.get(path, { headers })
+  try {
+    const response = await httpAuth0.get(path, { headers })
 
-//     return response.data
+    return response.data
 
-//   } catch (error) {
-//     console.log('error');
-//     console.log(error);
-//   }
-// }
+  } catch (error) {
+    console.log('error');
+    console.log(error);
+  }
+}
 
-// async function createUser(accessToken, data) {
-//   const headers = {
-//     'Content-Type': 'application/json',
-//     'Authorization': `Bearer ${accessToken}`
-//   }
-//   const path = `/auth/admin/realms/${KEYCLOAK_SIPE_REALM}/users`
+async function createUser(accessToken, data) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${accessToken}`
+  }
 
-//   try {
-//     return await httpKeycloak.post(path, data, { headers })
+  try {
+    return await httpAuth0.post('/api/v2/users', data, { headers })
 
-//   } catch (error) {
-//     console.log('error');
-//     console.log(error);
-//   }
-// }
+  } catch (error) {
+    console.log('error');
+    console.log(error);
+  }
+}
+
+async function updateUser(accessToken, userId, data) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${accessToken}`
+  }
+  const path = `/api/v2/users/${userId}`
+
+  try {
+    return await httpAuth0.patch(path, data, { headers })
+
+  } catch (error) {
+    console.log('error');
+    console.log(error);
+  }
+}
 
 // async function getUserRoles(accessToken, userId, clientId) {
 //   const headers = {
@@ -161,4 +175,9 @@ async function getAdminToken(credentials) {
 
 module.exports = {
   getAdminToken,
+  getUserByEmail,
+  getUsers,
+  createUser,
+  getUserById,
+  updateUser,
 }
