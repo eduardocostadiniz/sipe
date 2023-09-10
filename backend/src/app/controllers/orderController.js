@@ -3,7 +3,6 @@ const express = require('express');
 const dbConnection = require('../../database');
 const authMiddleware = require('../middlewares/auth');
 const { UserProfile } = require('../constants');
-const keycloakService = require('../services/keycloak');
 
 const router = express.Router();
 

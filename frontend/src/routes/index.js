@@ -1,23 +1,35 @@
-import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
-
-import UserContext from "../contexts/userContext";
+import React, { useContext, useEffect } from "react";
+import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 
 import LoggedRoutes from './loggedRoutes';
-import DefaultRoutes from './defaultRoutes';
-import { useKeycloak } from "@react-keycloak/web";
+import UserContext from "../contexts/userContext";
 
-export default function Routes() {
-  const { user } = useContext(UserContext);
-  const { keycloak, initialized } = useKeycloak();
 
-  if (!initialized) {
-    return <h3>Um momento, carregando a aplicação... !!!</h3>;
-  }
+const ProtectedRoutes = ({ children }) => {
+  const { getIdTokenClaims, user } = useAuth0();
+  const { loginUser } = useContext(UserContext)
 
-  if (keycloak?.authenticated) {
-    return <LoggedRoutes />;
-  }
+  useEffect(() => {
+    (async () => {
+      try {
+        const idToken = await getIdTokenClaims();
 
-  return <></>;
+        await loginUser(user.email, idToken.__raw)
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+
+  }, [getIdTokenClaims]);
+
+  return (
+    <>
+      <LoggedRoutes />
+      {children}
+    </>
+  )
 }
+
+export default withAuthenticationRequired(ProtectedRoutes, {
+  onRedirecting: () => <div>Redirecionando aplicação...</div>,
+});

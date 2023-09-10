@@ -6,7 +6,6 @@ const User = require('../models/user');
 const { UserProfile } = require('../constants');
 const { generateToken } = require('../utils');
 const multerStorage = require('../modules/multer');
-const keycloakService = require('../services/keycloak');
 
 const router = express.Router();
 

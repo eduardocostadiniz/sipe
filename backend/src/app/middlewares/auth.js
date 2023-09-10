@@ -15,7 +15,6 @@ async function getPublicKey(kid) {
 
 module.exports = async (req, res, next) => {
   const authHeader = req.headers.authorization;
-  const sipeFrontendClientId = process.env.SIPE_FRONTEND_CLIENT_ID;
 
   if (!authHeader) {
     console.log('Token not provided!');
@@ -37,6 +36,10 @@ module.exports = async (req, res, next) => {
   }
 
   const tokenDecoded = await jwt.decode(token, {complete: true})
+
+  console.log('tokenDecoded');
+  console.log(tokenDecoded);
+
   const tokenKid = tokenDecoded.header.kid
   const publicKey = await getPublicKey(tokenKid)
 
@@ -47,7 +50,7 @@ module.exports = async (req, res, next) => {
     }
 
     const allowedRequesters = process.env.AUTH0_SIPE_ALLOWED_REQUESTERS.split(',')
-    if (!allowedRequesters.includes(decoded.azp)) {
+    if (!allowedRequesters.includes(decoded.aud)) {
       console.log('Invalid Requester');
       return res.status(403).send({ error: 'Invalid Requester!' });
     }

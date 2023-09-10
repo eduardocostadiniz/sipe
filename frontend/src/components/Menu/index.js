@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { InputContainer, MenuContainer, BrandInfo, MenuOptions } from './styles';
 
 import EduGhostPlayerImg from '../../assets/img/EduGhostPlayer.jpg';
-import KeycloakContext from "../../contexts/keycloakContext";
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 function MenuItem({ path, iconName, name }) {
@@ -19,7 +19,6 @@ function MenuItem({ path, iconName, name }) {
 }
 
 function MenuItemAction({ action }) {
-  // TODO: remover essa função quando a ação de logout for para o modal no avatar do usuário
   return (
     <li onClick={() => action()}>
       <span className='ti-shift-right'></span>
@@ -29,7 +28,7 @@ function MenuItemAction({ action }) {
 }
 
 function Menu() {
-  const { disconnectUser } = useContext(KeycloakContext);
+  const { logout } = useAuth0()
 
   return (
     <>
@@ -48,7 +47,7 @@ function Menu() {
             <MenuItem path='/payments' iconName='ti-money' name='Pagamentos' />
             <MenuItem path='/users' iconName='ti-user' name='Usuários' />
             <MenuItem path='/settings' iconName='ti-settings' name='Configurações' />
-            <MenuItemAction action={disconnectUser} />
+            <MenuItemAction action={logout} />
           </ul>
         </MenuOptions>
       </MenuContainer>

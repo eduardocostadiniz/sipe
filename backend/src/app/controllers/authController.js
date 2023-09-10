@@ -3,8 +3,6 @@ const express = require('express');
 const dbConnection = require('../../database');
 const User = require('../models/user');
 
-const keycloakService = require('../services/keycloak');
-
 const router = express.Router();
 
 router.post('/authenticate', async (req, res) => {
