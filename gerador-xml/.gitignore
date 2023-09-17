@@ -1,0 +1,15 @@
+# Virtual Env
+venv
+
+# VS Code Config
+.vscode
+
+# direnv
+.envrc
+
+# Diretório de saída de XML
+xml
+
+# Python
+__pycache__
+*.pyc

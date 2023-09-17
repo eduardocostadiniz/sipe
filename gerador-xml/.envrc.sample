@@ -1,0 +1,5 @@
+export SIPE_POSTGRES_DB_HOST="host"
+export SIPE_POSTGRES_DB_PORT="port"
+export SIPE_POSTGRES_DB_NAME="dbname"
+export SIPE_POSTGRES_DB_USER="user"
+export SIPE_POSTGRES_DB_PWRD="password"

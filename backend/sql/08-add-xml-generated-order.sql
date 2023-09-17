@@ -1,0 +1,1 @@
+alter table orders add column xml_generated boolean default false
